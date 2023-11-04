@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Trang chủ{% endblock title %}
+
+{% block content %}
+<div class="min-h-screen">
+    {% include "home/header.html" %}
+    {% include "home/banner.html" %}
+    {% include "home/filter.html" %}
+    {% include "home/display.html" %}
+    {% include "home/footer.html" %}
+</div>
+<script src="{% static "js/home.js" %}"></script>
+<script src="{% static "js/chat.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock content %}

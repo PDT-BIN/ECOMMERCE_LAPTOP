@@ -1,0 +1,293 @@
+{% extends "components/component.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block tool %}
+	{% include "components/search.html" with type="controls:product" %}
+	{% if not request.user.is_superuser %}
+		<a href="{% url "controls:create-product" %}" class="hover:text-green-500"><i class="fa-regular fa-square-plus text-3xl"></i></a>
+		<a href="{% url "controls:create-specification" %}" class="hover:text-green-500"><i class="fa-solid fa-gear text-3xl"></i></a>
+	{% endif %}
+	{% if action %}
+		<a href="{% url "controls:product" %}">
+			<i class="fa-solid fa-right-from-bracket text-2xl hover:text-red-500"></i>
+		</a>
+	{% endif %}
+{% endblock tool %}
+
+{% block table %}
+	{% if not action %}
+		<div class="rounded-lg overflow-hidden">
+			<table class="min-w-full text-xs">
+				<thead class="dark:bg-gray-700">
+					<tr class="text-left">
+						<th class="w-[5%] p-3"></th>
+						<th class="w-[25%] p-3">Tên sản phẩm</th>
+						<th class="w-[15%] p-3">Danh mục</th>
+						<th class="w-[10%] p-3">Số lượng</th>
+						<th class="w-[10%] p-3 text-right">Giá bán</th>
+						<th class="w-[15%] p-3 text-right">Trạng thái</th>
+						<th class="w-[20%] p-3 text-center">Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for result in results %}
+						<tr class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
+							<td class="p-3 {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+								<form action="{% url "controls:delete-product" result.pk %}" class="text-center {% if not result.can_delete %}pointer-events-none text-gray-500{% endif %}">
+									<button class="delete hover:text-red-500">
+										<i class="fa-regular fa-rectangle-xmark text-xl"></i>
+									</button>
+								</form>
+							</td>
+							<td class="p-3">
+								<p>{{ result }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.category.name }}</p>
+							</td>
+							<td class="p-3 dark:text-gray-400">
+								<p>{{ result.quantity }}</p>
+							</td>
+							<td class="p-3 dark:text-gray-400 text-right">
+								<p>{{ result.price | floatformat:0 | intcomma }}</p>
+							</td>
+							<td class="p-3 text-right italic">
+								{% if result.quantity == 0 %}
+									<span class="px-3 py-1 rounded-full font-semibold rounded-mdtext-white bg-red-500">
+										Hết hàng
+									</span>
+								{% endif %}
+							</td>
+							<td class="p-3 {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+								<form action="{% url "controls:update-product" result.pk %}" class="text-center">
+									<button class="hover:text-sky-500">
+										<i class="fa-regular fa-pen-to-square text-2xl"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		{% if result %}
+			{% include "components/delete.html" with type="controls:delete-product" name=result.name %}
+		{% else %}
+			<div class="p-5 bg-gray-200 rounded-md overflow-hidden text-black">
+				{% if task == 0 %}
+					<form action="" method="post" enctype="multipart/form-data" class="flex flex-col gap-5">
+						{% csrf_token %}
+
+						<div class="space-y-5 text-sm mx-auto">
+							<div class="max-w-[192px] max-h-32 rounded-md overflow-hidden">
+								<img src="" alt="" class="object-contain rounded-md mx-auto">
+							</div>
+							{{ form.image }}
+						</div>
+						<div class="space-y-4">
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Tên model</label>
+								{{ form.name }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Số lượng tồn</label>
+								{{ form.quantity }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Giá bán</label>
+								{{ form.price }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Nhà sản xuất</label>
+								<input type="text" name="manufacturer" class="dashboard-input" list="manufacturer-list" value="{{ manufacturer }}">
+								<datalist id="manufacturer-list">
+									<select>
+										{% for manufacturer in manufactures %}
+											<option value="{{ manufacturer.name }}">{{ manufacturer.name }}</option>
+										{% endfor %}
+									</select>
+								</datalist>
+							</div>
+							<!-- Specification -->
+							<div class="text-white text-xs">
+								<div class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="os" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Hệ điều hành">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="ram" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Bộ nhớ RAM">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="cpu" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Bộ xử lý trung tâm">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="disk" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Ổ đĩa">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="vga" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Card đồ họa">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="text" id="screen" class="p-2 w-full rounded-md placeholder:italic placeholder:normal-case outline-none text-black lowercase" placeholder="Kích thước - Độ phân giải màn hình">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="number" id="battery" class="p-2 w-full rounded-md outline-none placeholder:italic placeholder:normal-case text-black lowercase" placeholder="Năng lượng (h)">
+									</div>
+									<div class="p-3 w-[12.5%]">
+										<input type="number" id="weight" class="p-2 w-full rounded-lg outline-none placeholder:italic placeholder:normal-case text-black lowercase" placeholder="Trọng lượng (g)">
+									</div>
+								</div>
+								<ul class="dark:bg-gray-700 flex min-w-full font-bold">
+									<li class="w-[5%] p-3"></li>
+									<li class="w-[11.875%] p-3">OS</li>
+									<li class="w-[10%] p-3">RAM</li>
+									<li class="w-[14.5%] p-3">CPU</li>
+									<li class="w-[10%] p-3">Ổ đĩa</li>
+									<li class="w-[14.875%] p-3">Card đồ họa</li>
+									<li class="w-[13.75%] py-3">Màn hình</li>
+									<li class="w-[10%] py-3">Năng lượng</li>
+									<li class="w-[10%] py-3">Trọng lượng</li>
+								</ul>
+								<div class="min-h-[500px] max-h-[500px] overflow-y-auto bg-gray-900 leading-5">
+									{% if main %}
+										<div class="specification border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+											<div class="p-3 text-center w-[5%]">
+												<input type="radio" name="specification" value="{{ main.pk }}" required checked>
+											</div>
+											<div class="os p-3 w-[11.875%]">
+												{{ main.os }}
+											</div>
+											<div class="ram p-3 w-[10%]">
+												{{ main.ram }}
+											</div>
+											<div class="cpu p-3 w-[14.5%]">
+												{{ main.cpu }}
+											</div>
+											<div class="disk p-3 w-[10%]">
+												{{ main.disk }}
+											</div>
+											<div class="vga p-3 w-[14.875%]">
+												{{ main.vga }}
+											</div>
+											<div class="screen p-3 w-[13.75%]">
+												{{ main.screensize }} - {{ main.resolution }}
+											</div>
+											<div class="battery p-3 w-[10%]">
+												{{ main.battery }}
+											</div>
+											<div class="weight p-3 w-[10%]">
+												{{ main.weight }}
+											</div>
+										</div>
+									{% endif %}
+									{% for specification in specifications %}
+										<div class="specification border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+											<div class="p-3 text-center w-[5%]">
+												<input type="radio" name="specification" value="{{ specification.pk }}" required>
+											</div>
+											<div class="os p-3 w-[11.875%]">
+												{{ specification.os }}
+											</div>
+											<div class="ram p-3 w-[10%]">
+												{{ specification.ram }}
+											</div>
+											<div class="cpu p-3 w-[14.5%]">
+												{{ specification.cpu }}
+											</div>
+											<div class="disk p-3 w-[10%]">
+												{{ specification.disk }}
+											</div>
+											<div class="vga p-3 w-[14.875%]">
+												{{ specification.vga }}
+											</div>
+											<div class="screen p-3 w-[13.75%]">
+												{{ specification.screensize }} - {{ specification.resolution }}
+											</div>
+											<div class="battery p-3 w-[10%]">
+												{{ specification.battery }}
+											</div>
+											<div class="weight p-3 w-[10%]">
+												{{ specification.weight }}
+											</div>
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="mt-5 w-1/6 mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+							Xác nhận
+						</button>
+					</form>
+				{% else %}
+					<form action="" method="post" class="flex flex-col gap-5">
+						{% csrf_token %}
+						<div class="space-y-4">
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">OS</label>
+								{{ form.os }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">RAM</label>
+								{{ form.ram }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">CPU</label>
+								{{ form.cpu }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Ổ đĩa</label>
+								{{ form.disk }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">VGA</label>
+								{{ form.vga }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Năng lượng</label>
+								{{ form.battery }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Kích thước màn hình</label>
+								{{ form.screensize }}
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Độ phân giải màn hình</label>
+								{{ form.resolution }}
+								<datalist id="screensize-list">
+									<select>
+										<option value="13.3">13.3</option>
+										<option value="14">14</option>
+										<option value="15.6">15.6</option>
+									</select>
+								</datalist>
+							</div>
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Trọng lượng</label>
+								{{ form.weight }}
+							</div>
+						</div>
+						<button type="submit" class="mt-5 w-1/6 mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+							Xác nhận
+						</button>
+					</form>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endif %}
+	<!-- Upload Image -->
+	<script>
+		var uploadButton = document.querySelector('input[name=image]')
+
+		uploadButton.onchange = function (e) {
+			var reader = new FileReader()
+			reader.onload = function (file) {
+				var imgElement = e.target.parentElement.querySelector('img')
+				imgElement.src = file.target.result
+			}
+			reader.readAsDataURL(e.target.files[0])
+		}
+	</script>
+	<!-- Specification -->
+	<script src="{% static "js/specification.js" %}"></script>
+{% endblock table %}

@@ -1,0 +1,14 @@
+<div class="w-3/5 p-5 bg-gray-200 rounded-md overflow-hidden text-black mx-auto">
+    <form action="{% url type result.pk %}" method="post" class="flex flex-col gap-3">
+        {% csrf_token %}
+
+        <div class="text-center text-red-500 flex items-center justify-center gap-4">
+            <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+            <span class="font-bold">Bạn có chắc chắn muốn xóa "{{ name }}"?</span>
+        </div>
+        
+        <button type="submit" class="mt-5 w-1/4 mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+            Xác nhận
+        </button>
+    </form>
+</div>

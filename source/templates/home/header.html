@@ -1,0 +1,133 @@
+{% load static %}
+{% load humanize %}
+
+
+<header>
+	<!-- Introduction -->
+	<p class="flex h-10 items-center justify-center bg-indigo-600 text-sm font-medium text-white italic">
+		Chào mừng bạn! Rất nhiều ưu đãi đang chờ bạn hôm nay <i class="fa-solid fa-gift text-lg pl-2"></i>
+	</p>
+	<!-- Navigation -->
+	<nav class="mx-auto max-w-full px-4">
+		<div class="border-b border-gray-200">
+			<div class="flex h-16 justify-between items-center gap-20">
+				<!-- Logo -->
+				<div class="ml-4 flex">
+					<a href="{% url "home" %}">
+						<img class="h-8 w-auto" src="{% static "img/logo.svg" %}" alt="Logo">
+					</a>
+				</div>
+				
+				<div class="w-full flex justify-between items-center font-main">
+					<!-- Search -->
+					<div class="w-1/2 p-1 border-2 border-solide border-black rounded-md">
+						<form action="{% url "home" %}" class="flex justify-center items-center">
+							<label for="search"><i class="fa-solid fa-magnifying-glass px-3"></i></label>
+							<input type="search" name="kw" id="search" placeholder="Bạn tìm gì hôm nay?" class="w-full p-1 border-none outline-none placeholder:italic">
+						</form>
+					</div>
+					<!-- Tools -->
+					<ul class="flex justify-end items-center {% if request.user.is_authenticated %}gap-12{% else %}gap-3{% endif %}">
+						{% if request.user.is_authenticated %}
+							<!-- Order -->
+							<li>
+								<a href="{% url "orders:order-page" 0 %}" class="text-primary hover:text-indigo-600">
+									<i class="fa-solid fa-truck-fast text-xl"></i> <span class="hidden md:inline">Tra cứu đơn hàng</span>
+								</a>
+							</li>
+							<!-- Cart -->
+							<li id="cart-block" class="relative group">
+								<!-- Parent -->
+								<a href="{% url "orders:cart-page" %}" class="text-primary hover:text-indigo-600">
+									<i class="fa-solid fa-cart-shopping text-xl"></i> <span class="hidden md:inline">Giỏ hàng</span>
+								</a>
+								<!-- Child -->
+								<div class="absolute hidden group-hover:flex flex-col min-w-max p-2 space-y-3 sm:p-5 dark:bg-gray-900 dark:text-gray-100 z-10 top-10 right-0 rounded-lg">
+									{% if cart_models %}
+										<!-- Product Quantity -->
+										<h3 class="text-sm font-semibold italic">
+											{{ cart_models | length }} loại sản phẩm
+										</h3>
+										<!-- Product Information -->
+										<ul class="flex flex-col divide-y divide-gray-700">
+											{% for model in cart_models %}
+												<li class="flex flex-col py-6 sm:flex-row sm:justify-between">
+													<div class="flex w-full space-x-2 sm:space-x-4">
+														<img class="flex-shrink-0 object-cover w-16 h-16 dark:border-transparent rounded outline-none sm:w-32 sm:h-32 dark:bg-gray-500" src="{{ model.image }}">
+														<div class="flex flex-col justify-between w-full pb-4">
+															<div class="flex justify-between w-full pb-2 space-x-2">
+																<h3 class="text-sm font-semibold sm:pr-8 w-52 italic">
+																	{{ model.name }} - {{ model.specification.pk }}
+																</h3>
+																<p class="text-sm font-semibold text-right">
+																	{{ model.price | floatformat:0 | intcomma }} VNĐ
+																</p>
+															</div>
+														</div>
+													</div>
+												</li>
+											{% endfor %}
+										</ul>
+									{% else %}
+										<p class="text-sm italic">Bạn chưa mua gì cả! <i class="fa-regular fa-face-sad-tear text-xl"></i></p>
+									{% endif %}
+								</div>
+							</li>
+							<!-- Account -->
+							<li id="user-block" class="relative group">
+								<!-- Parent -->
+								<div>
+									<i class="fa-solid fa-circle-user text-4xl cursor-pointer"></i>
+								</div>
+								<!-- Child -->
+								<div id="sub-user-block" class="hidden group-hover:block absolute bg-gray-200 top-14 right-0 rounded-lg before:content-[''] before:absolute before:border-[11px] before:-top-5 before:right-8 before:border-t-transparent before:border-r-transparent before:border-b-gray-200 before:border-l-transparent z-10">
+									<ul class="w-60 p-4 space-y-4 text-primary">
+										<li>
+											<a href="{% url "profile" 1 %}" class="hover:text-indigo-600">
+												<i class="fa-solid fa-user text-xl"></i>
+												Thông tin cá nhân
+											</a>
+										</li>
+										<li>
+											<a href="{% url "profile" 2 %}" class="hover:text-indigo-600">
+												<i class="fa-solid fa-location-dot text-xl" aria-hidden="true"></i>
+												<span>Sổ địa chỉ</span>
+											</a>
+										</li>
+										<li>
+											<a href="{% url "profile" 4 %}" class="hover:text-indigo-600">
+												<i class="fa-solid fa-lock text-xl"></i>
+												Đổi mật khẩu
+											</a>
+										</li>
+										<li>
+											<a href="{% url "logout" %}" class="hover:text-indigo-600">
+												<i class="fa-solid fa-right-from-bracket text-xl"></i>
+												Đăng xuất
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						{% else %}
+							<!-- Sign Up -->
+							<li>
+								<a href="{% url "signup" %}" class="log-link">
+									<i class="fa-solid fa-user-plus text-lg"></i> Đăng ký
+								</a>
+							</li>
+							<!-- Sign In -->
+							<li>
+								<a href="{% url "signin" %}" class="log-link">
+									<i class="fa-solid fa-right-to-bracket text-lg"></i> Đăng nhập
+								</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- ChatBot -->
+	{% include "home/chatbot.html" %}
+</header>

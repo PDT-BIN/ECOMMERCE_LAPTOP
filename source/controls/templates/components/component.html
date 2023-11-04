@@ -1,0 +1,23 @@
+{% load static %}
+
+
+<div class="container mx-auto text-gray-100">
+    <!-- Search Bar -->
+	<div class="w-full mb-5 flex gap-10 items-center text-black">
+		<!-- Tools -->
+		{% block tool %}{% endblock tool %}
+	</div>
+	<!-- Data Table -->
+	{% block table %}{% endblock table %}
+	{% if not action %}
+		<!-- Pagination -->
+		{% include "components/pagination.html" %}
+	{% endif %}
+</div>
+<!-- JavaScript -->
+<script>
+	var allSelects = document.querySelectorAll('select')
+	allSelects.forEach(function (e) {
+		e.classList.add('w-[70%]', 'p-2', 'outline-none', 'rounded-md')
+	});
+</script>

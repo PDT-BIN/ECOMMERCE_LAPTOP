@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Quản trị viên{% endblock title %}
+
+{% block content %}
+    <div class="max-w-full min-h-screen font-main">
+        <!-- Navigation -->
+        <nav class="h-20 bg-gray-800 flex justify-between items-center px-10">
+            <!-- Tools -->
+            <ul class="flex items-center text-white text-sm gap-7">
+                <li>
+                    <img class="h-10" src="{% static "img/logo.svg" %}" alt="">
+                </li>
+                {% if request.user.is_superuser %}
+                    <li class="bg-gray-900 px-5 py-2 rounded-md hover:bg-gray-700 {% if section == 0 %}bg-white text-black{% endif %}">
+                        <a href="{% url "controls:employee" %}">Nhân viên</a>
+                    </li>
+                {% endif %}
+                <li class="bg-gray-900 px-5 py-2 rounded-md hover:bg-gray-700 {% if section == 1 %}bg-white text-black{% endif %}">
+                    <a href="{% url "controls:product" %}">Sản phẩm</a>
+                </li>
+                <li class="bg-gray-900 px-5 py-2 rounded-md hover:bg-gray-700 {% if section == 2 %}bg-white text-black{% endif %}">
+                    <a href="{% url "controls:reservation" %}">Phiếu đặt</a>
+                </li>
+                <li class="bg-gray-900 px-5 py-2 rounded-md hover:bg-gray-700 {% if section == 3 %}bg-white text-black{% endif %}">
+                    <a href="{% url "controls:importation" %}">Phiếu nhập</a>
+                </li>
+                <li class="bg-gray-900 px-5 py-2 rounded-md hover:bg-gray-700 {% if section == 4 %}bg-white text-black{% endif %}">
+                    <a href="{% url "controls:order" %}">Đơn đặt hàng</a>
+                </li>
+            </ul>
+            <!-- Profile -->
+            <div class="text-white text-2xl space-x-5">
+                <a href="{% url "controls:logout" %}" class="hover:text-indigo-600">
+                    <i class="fa-solid fa-right-from-bracket text-2xl"></i>
+                </a>
+                <a href="{% url "controls:change-password" %}" class="hover:text-indigo-600">
+                    <i class="fa-solid fa-key text-2xl"></i>
+                </a>
+                <i class="fa-solid fa-user-gear"></i>
+            </div>
+        </nav>
+        <!-- Display -->
+        <div class="w-full my-5">
+            {% if section == 0 %}
+                {% include "dashboard/employee.html" %}
+            {% elif section == 1 %}
+                {% include "dashboard/product.html" %}
+            {% elif section == 2 %}
+                {% include "dashboard/reservation.html" %}
+            {% elif section == 3 %}
+                {% include "dashboard/importation.html" %}
+            {% elif section == 4 %}
+                {% include "dashboard/order.html" %}
+            {% else %}
+                {% include "controls/password.html" %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

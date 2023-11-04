@@ -1,0 +1,197 @@
+{% extends "components/component.html" %}
+{% load static %}
+{% load humanize %}
+
+
+{% block tool %}
+	{% include "components/search.html" with type="controls:reservation" %}
+	{% if not request.user.is_superuser %}
+		<a href="{% url "controls:create-reservation" %}" class="hover:text-green-500"><i class="fa-regular fa-square-plus text-3xl"></i></a>
+	{% endif %}
+	{% if action %}
+		<a href="{% url "controls:reservation" %}">
+			<i class="fa-solid fa-right-from-bracket text-2xl hover:text-red-500"></i>
+		</a>
+	{% endif %}
+{% endblock tool %}
+
+{% block table %}
+	{% if not action %}
+	<div class="rounded-lg overflow-hidden">
+		<table class="min-w-full text-xs">
+			<thead class="dark:bg-gray-700">
+				<tr class="text-left">
+					<th class="w-[5%] p-3"></th>
+					<th class="w-[15%] p-3">Ngày lập</th>
+					<th class="w-[10%] p-3">ID</th>
+					<th class="w-[20%] p-3">Nhà cung cấp</th>
+					<th class="w-[15%] p-3">Thành tiền</th>
+					<th class="w-[15%] p-3 text-right">Trạng thái</th>
+					<th class="w-[20%] p-3 text-center">Thao tác</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for result in results %}
+					<tr class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
+						<td class="p-3">
+							<form action="{% url "controls:delete-reservation" result.pk %}" class="text-center {% if not result.can_delete %}pointer-events-none text-gray-500{% endif %} {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+								<button class="hover:text-red-500">
+									<i class="fa-regular fa-rectangle-xmark text-xl"></i>
+								</button>
+							</form>
+						</td>
+						<td class="p-3 dark:text-gray-400">
+							<p>{{ result.created | date:"d/m/Y" }}</p>
+						</td>
+						<td class="p-3">
+							<p>{{ result.pk }}</p>
+						</td>
+						<td class="p-3">
+							<p>{{ result.supplier.name }}</p>
+						</td>
+						<td class="p-3 dark:text-gray-400">
+							<p>{{ result.total | floatformat:0 | intcomma }}</p>
+						</td>
+						<td class="p-3 text-right italic">
+							{% if not result.importationform %}
+								<span class="px-3 py-1 font-semibold rounded-md text-white bg-red-500">
+									<span>Chờ nhập</span>
+								</span>
+							{% endif %}
+						</td>
+						<td class="p-3 flex gap-5 justify-center">
+							<form action="{% url "controls:view-reservation" result.pk %}" class="text-center">
+								<button class="hover:text-sky-500">
+									<i class="fa-solid fa-eye text-2xl"></i>
+								</button>
+							</form>
+							<form action="{% url "controls:update-reservation" result.pk %}" class="text-center {% if not result.can_delete %}pointer-events-none text-gray-500{% endif %} {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+								<button class="hover:text-sky-500">
+									<i class="fa-regular fa-pen-to-square text-2xl"></i>
+								</button>
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% else %}
+		{% if result %}
+			{% include "components/delete.html" with type="controls:delete-reservation" name=result.pk %}
+		{% else %}
+			<div class="p-5 bg-gray-200 rounded-md overflow-hidden text-black">
+				{% if task == 0 %}
+					<div class="space-y-4">
+						<div class="flex justify-between items-center">
+							<label for="" class="text-sm italic">Nhà cung cấp</label>
+							<input type="text" readonly name="supplier" class="dashboard-input" value="{{ form.supplier }}" required>
+						</div>
+
+						<div class="w-[70%] bg-white p-2 outline-none rounded-md ml-auto flex items-center gap-3">
+							<i class="fa-solid fa-magnifying-glass px-2 text-xl"></i>
+							<input type="text" id="look-up" class="w-full outline-none placeholder:italic placeholder:text-sm" placeholder="Nhập mã hoặc tên sản phẩm">
+						</div>
+						<div class="w-[70%] ml-auto text-white text-xs">
+							<ul class="dark:bg-gray-700 flex min-w-full font-bold">
+								<li class="p-3 w-[10%]"></li>
+								<li class="p-3 w-[35%]">Sản phẩm</li>
+								<li class="p-3 w-[27.5%]">Số lượng</li>
+								<li class="p-3 w-[27.5%]">Giá tiền</li>
+							</ul>
+							<div class="min-h-[500px] max-h-[500px] overflow-y-auto bg-gray-900">
+								{% for detail in details %}
+									<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+										<div class="p-3 text-center w-[10%]">
+											<input type="checkbox" class="M" name="model-list[]" value="{{ detail.laptop_model.pk }}" checked disabled>
+										</div>
+										<div class="p-3 w-[35%]">
+											<p class="model-code">{{ detail.laptop_model }}</p>
+										</div>
+										<div class="p-3 text-black w-[27.5%]">
+											<input type="number" class="P p-2" name="{{ detail.laptop_model.pk }}_Q" min="1" value="{{ detail.quantity }}" required readonly>
+										</div>
+										<div class="p-3 text-black w-[27.5%]">
+											<input type="number" class="Q p-2" name="{{ detail.laptop_model.pk }}_P" min="1" value="{{ detail.price }}" required readonly>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<form action="" method="post" class="flex flex-col gap-5">
+						{% csrf_token %}
+
+						<div class="space-y-4">
+							<div class="flex justify-between items-center">
+								<label for="" class="text-sm italic">Nhà cung cấp</label>
+								<input type="text" name="supplier" list="supplier-list" class="w-[70%] p-2 outline-none rounded-md" value="{{ form.supplier }}" required>
+								<datalist id="supplier-list">
+									<select>
+										{% for supplier in suppliers %}
+											<option value="{{ supplier.name }}">{{ supplier.name }}</option>
+										{% endfor %}
+									</select>
+								</datalist>
+							</div>
+
+							<div class="w-[70%] bg-white p-2 outline-none rounded-md ml-auto flex items-center gap-3">
+								<i class="fa-solid fa-magnifying-glass px-2 text-xl"></i>
+								<input type="text" id="look-up" class="w-full outline-none placeholder:italic placeholder:text-sm" placeholder="Nhập mã hoặc tên sản phẩm">
+							</div>
+							<div class="w-[70%] ml-auto text-white text-xs">
+								<ul class="dark:bg-gray-700 flex min-w-full font-bold">
+									<li class="p-3 w-[10%]"></li>
+									<li class="p-3 w-[35%]">Sản phẩm</li>
+									<li class="p-3 w-[27.5%]">Số lượng</li>
+									<li class="p-3 w-[27.5%]">Giá tiền</li>
+								</ul>
+								<div class="min-h-[500px] max-h-[500px] overflow-y-auto bg-gray-900">
+									{% for detail in details %}
+										<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+											<div class="p-3 text-center w-[10%]">
+												<input type="checkbox" class="M" name="model-list[]" value="{{ detail.laptop_model.pk }}" checked>
+											</div>
+											<div class="p-3 w-[35%]">
+												<p class="model-code">{{ detail.laptop_model }}</p>
+											</div>
+											<div class="p-3 text-black w-[27.5%]">
+												<input type="number" class="P p-2" name="{{ detail.laptop_model.pk }}_Q" min="1" value="{{ detail.quantity }}" required>
+											</div>
+											<div class="p-3 text-black w-[27.5%]">
+												<input type="number" class="Q p-2" name="{{ detail.laptop_model.pk }}_P" min="1" value="{{ detail.price }}" required>
+											</div>
+										</div>
+									{% endfor %}
+									{% for model in models %}
+										{% if not model.reservationdetails_set.all %}
+											<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+												<div class="p-3 text-center w-[10%]">
+													<input type="checkbox" class="M" name="model-list[]" value="{{ model.pk }}">
+												</div>
+												<div class="p-3 w-[35%]">
+													<p class="model-code">{{ model }}</p>
+												</div>
+												<div class="p-3 text-black w-[27.5%]">
+													<input type="number" class="P p-2" name="{{ model.pk }}_Q" min="1" value="">
+												</div>
+												<div class="p-3 text-black w-[27.5%]">
+													<input type="number" class="Q p-2" name="{{ model.pk }}_P" min="1" value="">
+												</div>
+											</div>
+										{% endif %}
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="mt-5 w-1/6 mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+							Xác nhận
+						</button>
+					</form>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endif %}
+	<script src="{% static "js/form.js" %}"></script>
+{% endblock table %}

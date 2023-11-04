@@ -1,0 +1,196 @@
+{% extends "components/component.html" %}
+{% load humanize %}
+
+
+{% block tool %}
+	{% include "components/search.html" with type="controls:order" %}
+	{% if action %}
+	<a href="{% url "controls:order" %}">
+		<i class="fa-solid fa-right-from-bracket text-2xl hover:text-red-500"></i>
+	</a>
+	{% endif %}
+{% endblock tool %}
+
+{% block table %}
+	{% if not action %}
+		<div class="rounded-lg overflow-hidden">
+			<table class="min-w-full text-xs">
+				<thead class="dark:bg-gray-700">
+					<tr class="text-left">
+						<th class="w-[10%] p-3">ID</th>
+						<th class="w-[15%] p-3">Khách hàng</th>
+						<th class="w-[15%] p-3">Ngày đặt</th>
+						<th class="w-[15%] p-3">Thành tiền</th>
+						<th class="w-[15%] p-3">Giao hàng</th>
+						<th class="w-[15%] p-3 text-center">Trạng thái</th>
+						<th class="w-[20%] p-3 text-center">Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for result in results %}
+						<tr class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
+							<td class="p-3">
+								<p>{{ result.pk }}</p>
+							</td>
+							<td class="p-3">
+								<p>
+									{% if result.customer.first_name == None or result.customer.last_name == None %}
+										Khách hàng #{{ result.customer.pk }}
+									{% else %}
+										{{ result.customer.fullname }}
+									{% endif %}
+								</p>
+							</td>
+							<td class="p-3 dark:text-gray-400">
+								<p>{{ result.created | date:"d/m/Y" }}</p>
+							</td>
+							<td class="p-3 dark:text-gray-400">
+								<p>{{ result.total | floatformat:0 | intcomma }}</p>
+							</td>
+							<td class="p-3">
+								<p>
+									{% if result.deliver_employee %}
+										{% if result.deliver_employee.first_name == None or result.deliver_employee.last_name == None %}
+											Nhân viên #{{ result.deliver_employee.pk }}
+										{% else %}
+											{{ result.deliver_employee.fullname }}
+										{% endif %}
+									{% endif %}
+								</p>
+							</td>
+							<td class="p-3 text-center italic">
+								{% if not result.importationform %}
+									<span class="px-3 py-1 font-semibold rounded-md text-white bg-red-500">
+										<span>{{ result.state }}</span>
+									</span>
+								{% endif %}
+							</td>
+							<td class="p-3 flex gap-5 justify-center">
+								<form action="{% url "controls:view-order" result.pk %}" class="text-center">
+									<button class="hover:text-sky-500">
+										<i class="fa-solid fa-eye text-2xl"></i>
+									</button>
+								</form>
+								<form action="{% url "controls:confirm-order" result.pk %}" class="{% if result.state.pk != 1 and result.state.pk != 3 %}pointer-events-none text-gray-500{% endif %} {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+									<button class="hover:text-sky-500">
+										<i class="fa-regular fa-square-check text-2xl"></i>
+									</button>
+								</form>
+								<form action="{% url "controls:deliver-order" result.pk %}" class="{% if result.state.pk != 2 %}pointer-events-none text-gray-500{% endif %} {% if request.user.is_superuser %}pointer-events-none text-gray-500{% endif %}">
+									<button class="hover:text-sky-500">
+										<i class="fa-solid fa-truck-fast text-2xl"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="p-5 bg-gray-200 rounded-md overflow-hidden text-black">
+			{% if task == 0 %}
+				<div class="bg-white rounded-md py-2 text-primary">
+					<!-- ORDER STATE -->
+					<div class="px-5 pt-3 flex justify-between">
+						<p class="italic">
+							<i class="fa-solid fa-circle-info"></i>
+							{{ order.address }}
+						</p>
+						<h2 class="flex items-center">
+							<i class="fa-solid fa-truck-fast"></i>
+							<p class="ml-3">{{ order.state.name }}</p>
+						</h2>
+					</div>
+					<hr class="mx-auto my-3 w-[95%]">
+					<!-- ORDER PRODUCTS -->
+					<div class="my-4 px-5 space-y-5">
+						{% for model, quantity, price in details %}
+							<div class="flex justify-between">
+								<div class="w-4/5 flex gap-10 relative">
+									<img class="w-1/5" src="{{ model.image }}" alt="">
+									<strong>{{ model.name }}</strong>
+									<div class="absolute left-0 bottom-0 flex justify-center items-center w-10 h-10 rounded-tl-lg rounded-br-lg bg-primary">
+										<p class="text-white">{{ quantity }}</p>
+									</div>
+								</div>
+								<p class="w-1/5 text-right">{{ price | floatformat:0 | intcomma }}</p>
+							</div>
+						{% endfor %}
+					</div>
+					<!-- ODER TOTAL -->
+					<hr class="mx-auto my-3 w-[95%]">
+					<div class="px-5 py-3 flex flex-col justify-end items-end gap-3">
+						<p>Tổng tiền: <strong>{{ order.total | floatformat:0 | intcomma }} VNĐ</strong></p>
+					</div>
+				</div>
+			{% elif task == 1 %}
+				<div class="bg-white rounded-md py-2 text-primary">
+					<!-- ORDER STATE -->
+					<div class="px-5 pt-3 flex justify-between">
+						<p class="italic">
+							<i class="fa-solid fa-circle-info"></i>
+							{{ order.address }}
+						</p>
+						<h2 class="flex items-center">
+							<i class="fa-solid fa-truck-fast"></i>
+							<p class="ml-3">{{ order.state.name }}</p>
+						</h2>
+					</div>
+					<hr class="mx-auto my-3 w-[95%]">
+					<!-- ORDER PRODUCTS -->
+					<div class="my-4 px-5 space-y-5">
+						{% for model, quantity, price in details %}
+							<div class="flex justify-between">
+								<div class="w-4/5 flex gap-10 relative">
+									<img class="w-1/5" src="{{ model.image }}" alt="">
+									<strong>{{ model.name }}</strong>
+									<div class="absolute left-0 bottom-0 flex justify-center items-center w-10 h-10 rounded-tl-lg rounded-br-lg bg-primary">
+										<p class="text-white">{{ quantity }}</p>
+									</div>
+								</div>
+								<p class="w-1/5 text-right">{{ price | floatformat:0 | intcomma }}</p>
+							</div>
+						{% endfor %}
+					</div>
+					<!-- ODER TOTAL -->
+					<hr class="mx-auto my-3 w-[95%]">
+					<div class="px-5 py-3 flex flex-col justify-end items-end gap-3">
+						<p>Tổng tiền: <strong>{{ order.total | floatformat:0 | intcomma }} VNĐ</strong></p>
+					</div>
+				</div>
+
+				<form action="" method="post" class="text-center">
+					{% csrf_token %}
+
+					<button type="submit" class="mt-6 w-1/6 text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+						Xác nhận
+					</button>
+				</form>
+			{% else %}
+				<form action="" method="post" class="flex flex-col">
+					{% csrf_token %}
+
+					<div class="flex justify-between items-center">
+						<label for="" class="text-sm italic">Nhân viên giao hàng</label>
+						<select name="shipper" required>
+							{% for shipper in shippers %}
+								<option value="{{ shipper.pk }}">
+									{% if shipper.first_name == None or shipper.last_name == None %}
+										Nhân viên #{{ shipper.pk }}
+									{% else %}
+										{{ shipper.pk }} - {{ shipper.fullname }}
+									{% endif %}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<button type="submit" class="mx-auto mt-6 w-1/6 text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+						Xác nhận
+					</button>
+				</form>
+			{% endif %}
+		</div>
+	{% endif %}
+{% endblock table %}

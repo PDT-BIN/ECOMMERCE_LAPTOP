@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}{{ model.name }}{% endblock %}
+
+{% block content %}
+    {% include "home/header.html" %}
+    <section class="my-5 p-5 flex font-main justify-around">
+        <!-- Tools -->
+        <div class="relative w-2/5">
+            <img class="w-[550px] h-[400px] object-contain mx-auto" src="{{ model.image }}" alt="">
+            <div class="mt-5 flex justify-center gap-10 text-white">
+                <a href="{% url "orders:purchase-cart" model.pk %}" class="p-3 bg-red-500 rounded-xl outline-none hover:ring-2 hover:ring-red-600">
+                    <i class="fa-solid fa-credit-card"></i> Thanh toán
+                </a>
+                <a href="{% url "orders:create-cart" model.pk %}" class="p-3 bg-sky-500 rounded-xl outline-none hover:ring-2 hover:ring-sky-600">
+                    <i class="fa-solid fa-cart-flatbed"></i> Thêm vào giỏ hàng
+                </a>
+                <a title="Quay lại" href="{{ request.META.HTTP_REFERER }}" class="block absolute -left-14 top-0 text-2xl text-black">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+            </div>
+        </div>
+        <div class="w-2/5">
+            <!-- Model name & Quantity -->
+            <strong class="text-lg">
+                <p class="flex justify-between items-center">
+                    <span class="italic">{{ model.name }} - {{ model.specification.pk }}</span>
+                    <span class="text-sm">Số lượng: {{ model.quantity }}</span>
+                </p>
+                <span class="text-red-500">{{ model.price | floatformat:0 | intcomma }} VNĐ</span>
+            </strong>
+            <!-- Specifications -->
+            <table class="w-full mt-3">
+                <caption class="mb-2 caption-top text-sm italic">Thông số kỹ thuật</caption>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Hệ điều hành </th>
+                    <td class="pl-10">{{ model.specification.os }}</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">CPU </th>
+                    <td class="pl-10">{{ model.specification.cpu }}</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Ổ đĩa </th>
+                    <td class="pl-10">{{ model.specification.disk }}</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Card đồ họa </th>
+                    <td class="pl-10">{{ model.specification.vga }}</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Năng lượng </th>
+                    <td class="pl-10">{{ model.specification.battery }} h</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Màn hình </th>
+                    <td class="pl-10">{{ model.specification.screensize }} inches</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Độ phân giải </th>
+                    <td class="pl-10">{{ model.specification.resolution }}</td>
+                </tr>
+                <tr class="h-11 even:bg-gray-300 odd:bg-gray-100">
+                    <th class="text-left w-40 pl-5">Trọng lượng </th>
+                    <td class="pl-10">{{ model.specification.weight }} kg</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    {% include "home/footer.html" %}
+{% endblock %}

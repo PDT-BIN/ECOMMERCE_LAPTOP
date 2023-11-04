@@ -1,0 +1,28 @@
+<section class="mx-5 my-6 font-main flex gap-x-10">
+    <!-- Category filter -->
+    <div class="w-1/2">
+        <p class="p-2 bg-indigo-600 rounded-t-lg text-white text-sm font-bold italic tracking-wide">
+            <i class="fa-solid fa-certificate"></i> Danh mục sản phẩm
+        </p>
+        <div class="relative w-auto flex gap-4 py-2 overflow-x-auto text-center">
+            {% for category in categories %}
+                <a href="{% url "home" %}?kw={{ category.name }}" class="inline-block min-w-[125px] p-4 rounded-md font-semibold text-white text-sm italic bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Manufacturer filter -->
+    <div class="w-1/2">
+        <p class="p-2 bg-indigo-600 rounded-t-lg text-white text-sm font-bold italic tracking-wide">
+            <i class="fa-solid fa-industry"></i> Hãng sản xuất
+        </p>
+        <div class="relative w-auto flex gap-4 py-2 overflow-x-auto text-center">
+            {% for manufacturer in manufacturers %}
+                <a href="{% url "home" %}?kw={{ manufacturer.name }}" class="inline-block min-w-[125px] p-4 rounded-md font-semibold text-white text-sm italic bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
+                    {{ manufacturer.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

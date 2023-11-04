@@ -1,0 +1,112 @@
+{% load static %}
+
+
+<!-- Buy now Modal -->
+<form id="myModal" class="modal font-main" action="{% url "orders:buy-now" %}" method="post">
+    {% csrf_token %}
+    <div class="modal-content rounded-lg bg-gray-300 max-h-[95vh]">
+        <!-- Product Information -->
+        <div class="product flex justify-between">
+            <!-- Image -->
+            <div class="product-img p-2 bg-white text-center rounded border-2 border-rose-700 mb-4 overflow-hidden">
+                <img id='img_pro' class="img_product object-cover object-center w-60 h-40 block " alt="">
+            </div>
+            <!-- Specification -->
+            <div class="inf pl-10 text-xl">
+                <p id='name_product' class="italic"></p>
+                <div class="product-price my-3">
+                    <strong id='price_product' class="block px-5 py-2 w-fit text-center text-lg rounded-full bg-red-500 text-white"></strong>
+                </div>
+                <div class="product-info text-base bg-orange-600 p-3 rounded-lg flex justify-between items-center gap-5 text-white">
+                    <span title="CPU" id='cpu_pro' class="cpu"></span>
+                    <span title="RAM" id='ram_pro' class="gam"></span>
+                    <span title="Ổ đĩa" id='disk_pro' class="disk"></span>
+                    <span title="Card đồ họa" id ='card_pro' class="card"></span>
+                    <span title="Kích thước màn hình" id='scr_pro' class="screen"></span>
+                </div>
+            </div>
+        </div>
+        <!-- Order Address -->
+        <strong class="title text-lg my-3 flex flex-row">Địa chỉ giao hàng</strong>
+        <!-- Address Notebook -->
+        <div id='box-select_ad' class="border-2 border-solid p-2 rounded-lg bg-white hidden">
+            <div class="block w-full">
+                <input id="radio_id" type="radio" value="choose" name='radio_add' class="mr-7" checked="true" hidden>
+                <div class="flex flex-col">
+                    <label for='radio_id' id="add_deli">
+                        <div class="p-2 flex flex-col gap-2">
+                            <span id="lb_name"></span>
+                            <span id="lb_phone"></span>
+                            <span id="lb_add"></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-10 justify-center mt-3" >
+            <button id='select_else' class="btnElse w-40 px-5 py-2 text-white bg-sky-500 hover:bg-sky-400 p-2 rounded-lg">Sổ địa chỉ</button>
+            <div class="flex flex-row">
+                <input id="radio_op" type="radio" value="not_choose" name='radio_add' class="mr-7" check="" hidden>
+                <label for='radio_op' id="add_deli_op" class="cursor-pointer w-40 px-5 py-2 text-white bg-green-500 hover:bg-green-400 p-2 rounded-lg">Địa chỉ khác</label>
+            </div>
+        </div>
+        <!-- Address Create -->
+        <div class="chooseAdd mt-5 justify-between text-xl flex flex-col">
+            <div id='bg_add' class="hidden">
+                <div class="flex justify-between">
+                    <input type="text" name="HoTen" class="w-[47%] px-3 py-2 bg-white text-base rounded-lg placeholder:text-sm" id="name_take" placeholder="Họ tên">
+                    <input type="text" name="sdt" class="w-[47%] px-3 py-2 bg-white text-base rounded-lg placeholder:text-sm" id="number_take" placeholder="Số điện thoại">
+                    <input id="diaChi" type="hidden" name="diaChi">
+                    <input type="hidden" name="model" id="lapModel">
+                </div>
+                <div class="my-5 flex flex-col space-y-5 text-base">
+                    <div class="flex justify-between items-center">
+                        <span class="w-52">Tỉnh/Thành phố: </span>
+                        <select id="dropdownProv" class="w-full p-2 bg-white rounded-lg" disabled></select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="w-52">Huyện/Quận: </span>
+                        <select id="dropdownDistr" class="w-full p-2 bg-white rounded-lg" disabled></select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="w-52">Phường/Xã: </span>
+                        <select id="dropdownWard" class="w-full p-2 bg-white rounded-lg" disabled></select>
+                    </div>
+                    <div class="apartNum flex justify-between items-center">
+                        <span class="w-52">Số nhà: </span>
+                        <input id='apart_input' type="text" class="inputAN w-full p-2 bg-white rounded-lg" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Button -->
+        <div>
+            <button id='confirm' class="btnConfirm text-base text-white bg-blue-500 hover:bg-blue-400 px-5 py-3 rounded-lg block mx-auto">
+                <i class="fa-solid fa-money-check-dollar"></i> Xác nhận
+            </button>
+        </div>
+    </div>
+</form>
+<!-- Address Notebook Modal -->
+<div id="myAddressModal" class="modal">
+    <div class="w-1/2 modal-content bg-gray-300 rounded-md p-0 border-0">
+        <p class="title text-base p-3 text-white bg-indigo-600"><i class="fa-solid fa-thumbtack"></i> Sổ địa chỉ</p>
+        <div class="m-5 space-y-4">
+            {% for address in addresses %}
+                <div class="address space-y-3 px-3 py-2 bg-white rounded-lg my-2">
+                    <h3 id='name_deli'>{{ address.fullname }}</h3>
+                    <p id ='phone_contact'>{{ address.phone }}</p>
+                    <p id="address_deli"><span class="address">{{ address.address }}</span></p>
+                    <button class="changeAddressBtn inline bg-blue-500 text-white rounded-md px-3 py-2 hover:bg-blue-300 hover:shadow">Giao đến địa chỉ này</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <button id='btn_close_select' class="btnConfirm mb-4 text-white bg-red-500 hover:bg-red-400 px-5 py-3 rounded-lg block mx-auto">
+                <i class="fa-solid fa-x"></i> Đóng
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modal Script -->
+<script src="{% static "js/buy_now.js" %}"></script>

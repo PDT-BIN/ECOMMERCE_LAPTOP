@@ -1,0 +1,162 @@
+{% extends "components/component.html" %}
+{% load humanize %}
+
+
+{% block tool %}
+	{% include "components/search.html" with type="controls:employee" %}
+	<a href="{% url "controls:create-employee" %}" class="hover:text-green-500"><i class="fa-regular fa-square-plus text-3xl"></i></a>
+	{% if action %}
+		<a href="{% url "controls:employee" %}">
+			<i class="fa-solid fa-right-from-bracket text-2xl hover:text-red-500"></i>
+		</a>
+	{% endif %}
+{% endblock tool %}
+
+{% block table %}
+	{% if not action %}
+		<div class="rounded-lg overflow-hidden">
+			<table class="min-w-full text-xs">
+				<thead class="dark:bg-gray-700">
+					<tr class="text-left">
+						<th class="w-[5%] p-3">ID</th>
+						<th class="w-[12.5%] p-3">Họ</th>
+						<th class="w-[10%] p-3">Tên</th>
+						<th class="w-[10%] p-3">Giới tính</th>
+						<th class="w-[12.5%] p-3">Ngày sinh</th>
+						<th class="w-[12.5%] p-3">Email</th>
+						<th class="w-[12.5%] p-3">Lương</th>
+						<th class="w-[10%] p-3">Chức vụ</th>
+						<th class="w-[15%] p-3 text-center">Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for result in results %}
+						<tr class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
+							<td class="p-3">
+								<p>{{ result.pk }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.last_name }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.first_name }}</p>
+							</td>
+							<td class="p-3">
+								<p>{% if result.gender == True %}Nam{% elif result.gender == False %}Nữ{% endif %}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.birthdate | date:"d/m/Y" }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.user.email }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.salary | floatformat:0 | intcomma }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.user.role }}</p>
+							</td>
+							<td class="p-3">
+								<form action="{% url "controls:update-employee" result.pk %}" class="text-center">
+									<button class="hover:text-sky-500">
+										<i class="fa-regular fa-pen-to-square text-2xl"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+        <div class="p-5 bg-gray-200 rounded-md overflow-hidden text-black">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="flex justify-between">
+                    <!-- Employee Information -->
+                    <div class="{% if task == 0 %}w-1/2{% else %}w-full{% endif %} flex flex-col gap-5">
+                        {% for field in form %}
+                            <div class="flex justify-center {% if field.label != "Địa chỉ" %}items-center{% endif %}">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">{{ field.label }}</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if task == 1 %}
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Email</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <input type="email" name="email" class="dashboard-input w-full" required value={{ result.user.email }}>
+                                </div>
+                            </div>
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Chức vụ</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <select name="role" class="dashboard-input w-full" required>
+                                        <option value="0" {% if result.user.is_staff == True %}selected{% endif %}>
+                                            Bán hàng
+                                        </option>
+                                        <option value="1" {% if result.user.is_shipper == True %}selected{% endif %}>
+                                            Vận chuyển
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- Account Information -->
+                    {% if task == 0 %}
+                        <div class="w-1/2 flex flex-col gap-5">
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Tài khoản</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <input type="text" name="username" class="dashboard-input w-full" required>
+                                </div>
+                            </div>
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Mật khẩu</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <input type="password" name="password" class="dashboard-input w-full" required>
+                                </div>
+                            </div>
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Email</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <input type="email" name="email" class="dashboard-input w-full" required>
+                                </div>
+                            </div>
+                            <div class="flex justify-center items-center">
+                                <div class="w-[20%]">
+                                    <label for="" class="text-xs italic">Chức vụ</label>
+                                </div>
+                                <div class="w-[65%]">
+                                    <select name="role" class="dashboard-input w-full" required>
+                                        <option value="0">Bán hàng</option>
+                                        <option value="1">Vận chuyển</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="mt-5 w-1/6 block mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+                    Xác nhận
+                </button>
+            </form>
+        </div>
+	{% endif %}
+{% endblock table %}

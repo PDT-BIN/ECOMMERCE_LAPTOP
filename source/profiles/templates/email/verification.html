@@ -1,0 +1,6 @@
+{% autoescape off %}
+Welcome our LAPTOP STORE!
+Dear Sir,
+Please confirm your email by clicking on the following link.
+Confirmation link: http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Trang cá nhân{% endblock %}
+
+{% block content %}
+{% include "home/header.html" %}
+<section class="flex font-main my-5">
+    <!-- Tools -->
+    <div class="w-1/4 pr-2 flex flex-col space-y-2 italic">
+        <a href="{% url "profile" 1 %}" class="p-2 flex items-center hover:bg-indigo-300 hover:text-white rounded-r-lg {% if choice == 1 %}bg-indigo-300{% endif %}">
+            <i class="fa-solid fa-user-shield w-1/5 text-center text-xl"></i>
+            <span>Thông tin cá nhân</span>
+        </a>
+        <a href="{% url "profile" 2 %}" class="p-2 flex items-center hover:bg-indigo-300 hover:text-white rounded-r-lg {% if choice == 2 %}bg-indigo-300{% endif %}">
+            <i class="fa-solid fa-location-dot w-1/5 text-center text-xl" aria-hidden="true"></i>
+            <span>Sổ địa chỉ</span>
+        </a>
+        <a href="{% url "profile" 4 %}" class="p-2 flex items-center hover:bg-indigo-300 hover:text-white rounded-r-lg {% if choice == 4 %}bg-indigo-300{% endif %}">
+            <i class="fa fa-lock w-1/5 text-center text-xl" aria-hidden="true"></i>
+            <span>Đổi mật khẩu</span>
+        </a>
+    </div>
+    <!-- Information -->
+    <div class="w-full m-10 rounded-lg shadow">
+        <!-- Title -->
+        <div class="p-5 border-b-2 border-b-gray-200">
+            <h1 class="text-xl font-semibold">HỒ SƠ CÁ NHÂN</h1>
+            <p class="italic">Quản lý thông tin để bảo mật tài khoản</p>
+        </div>
+        <!-- Form -->
+        {% if choice == 1 %}
+            {% include "customer/user_profile.html" %}
+        {% elif choice == 2 %}
+            {% include "customer/address.html" %}
+        {% elif choice == 4 %}
+            {% include "customer/change_password.html" %}
+        {% endif %}
+    </div>
+</section>
+{% include "home/footer.html" %}
+{% endblock content %}

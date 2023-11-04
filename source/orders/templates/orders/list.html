@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}Đơn hàng{% endblock title %}
+
+{% block content %}
+    {% include "home/header.html" %}
+    <section class="w-4/5 mx-auto my-5 font-main">
+        <!-- Filter Bar -->
+        <ul class="mb-5 flex justify-between text-center">
+            <li class="w-1/6 p-2 border-b-4 hover:text-blue-500 hover:border-b-sky-500 {% if choice == 0 %}border-b-sky-500{% else %}border-b-transparent{% endif %}">
+                <a href="{% url "orders:order-page" 0 %}">Tất cả đơn</a>
+            </li>
+            {% for state in states %}
+                <li class="w-1/6 p-2 border-b-4 hover:text-blue-500 hover:border-b-sky-500 {% if choice == state.pk %}border-b-sky-500{% else %}border-b-transparent{% endif %}">
+                    <a href="{% url "orders:order-page" state.pk %}">{{ state.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <!-- Search Bar -->
+        <div class="p-1 border-2 border-solide border-black rounded-md">
+            <form action="{% url "orders:order-page" 0 %}" class="flex justify-center items-center">
+                <label for="search"><i class="fa-solid fa-magnifying-glass px-3"></i></label>
+                <input type="search" name="kw" id="search" placeholder="Nhập mã đơn hàng của bạn" class="w-full p-1 border-none outline-none placeholder:text-sm placeholder:italic">
+            </form>
+        </div>
+        <!-- Order List -->
+        <div class="my-5 p-5 rounded-md bg-secondary space-y-5">
+            {% for order, details, total in orders %}
+                <div class="bg-white rounded-md py-2">
+                    <!-- ORDER STATE -->
+                    <div class="text-primary px-5 pt-3 flex justify-between">
+                        <h2 class="flex items-center gap-3">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <p>{{ order.state }}</p>
+                        </h2>
+                        <h2 class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <p class="text-xs">Đơn hàng: #{{ order.pk }} - Khách hàng: {{ order.address }}</p>
+                        </h2>
+                    </div>
+                    <hr class="mx-auto my-3 w-[95%]">
+                    <!-- ORDER PRODUCTS -->
+                    <div class="my-4 px-5 space-y-5">
+                        {% for model, quantity, price in details %}
+                            <div class="flex justify-between">
+                                <div class="w-4/5 flex gap-10 relative">
+                                    <img class="w-1/5" src="{{ model.image }}" alt="">
+                                    <strong>{{ model.name }}</strong>
+                                    <div class="absolute left-0 bottom-0 flex justify-center items-center w-10 h-10 rounded-tl-lg rounded-br-lg bg-primary">
+                                        <p class="text-white">{{ quantity }}</p>
+                                    </div>
+                                </div>
+                                <p class="w-1/5 text-right">{{ price | floatformat:0 | intcomma }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- ODER TOTAL -->
+                    <hr class="mx-auto my-3 w-[95%]">
+                    <div class="px-5 py-3 flex flex-col justify-end items-end gap-3">
+                        <p>Tổng tiền: <strong>{{ total | floatformat:0 | intcomma }} VNĐ</strong></p>
+                        <!-- TOOLS -->
+                        {% if order.state.pk < 3 %}
+                            <a href="{% url "orders:cancel-order" order.pk %}" class="block px-5 py-2 rounded-lg border-2 border-red-500 text-red-500 hover:text-white hover:bg-red-500">Hủy đơn hàng</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="min-h-[20vh] flex flex-col gap-5 justify-center items-center">
+                    <h3 class="text-center italic">Bạn không có đơn hàng nào!</h3>
+                    <i class="fa-regular fa-face-frown text-2xl"></i>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% include "home/footer.html" %}
+{% endblock content %}

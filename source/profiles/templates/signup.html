@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block title %}Đăng ký{% endblock title %}
+
+{% block content %}
+<div class="log-form-control">
+    <form action="" method="post" class="log-form">
+        {% csrf_token %}
+        <h1 class="text-4xl text-center font-serif font-semibold">REGISTRATION</h1>
+
+        <div class="my-7 space-y-7">
+            <div class="log-input-group">
+                <i class="fa-solid fa-user log-input-icon"></i>
+                {{ form.username }}
+            </div>
+
+            <div class="log-input-group">
+                <i class="fa-solid fa-envelope log-input-icon"></i>
+                {{ form.email }}
+            </div>
+
+            <div class="log-input-group">
+                <i class="fa-solid fa-lock log-input-icon"></i>
+                {{ form.password1 }}
+            </div>
+
+            <div class="log-input-group">
+                <i class="fa-solid fa-lock log-input-icon"></i>
+                {{ form.password2 }}
+            </div>
+        </div>
+
+        <button type="submit" class="log-button">SIGN UP</button>
+        
+        <p class="mt-10 text-center text-sm italic">
+            Already have an account? <a href="{% url 'signin' %}" class="hover:text-sky-300">Login</a>
+        </p>
+    </form>
+</div>
+{% endblock content %}

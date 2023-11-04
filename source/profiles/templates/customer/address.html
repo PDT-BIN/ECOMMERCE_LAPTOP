@@ -1,0 +1,86 @@
+{% load static %}
+
+
+<!-- Form -->
+<div class="mx-4 py-3 flex flex-col gap-5 font-main">
+    <button class="buyButtons w-fit bg-green-300 rounded-xl px-4 py-3 hover:text-white ml-auto">
+        <i class="fa-solid fa-circle-plus"></i> Thêm mới
+    </button>
+	<!-- Addresses -->
+    <div class="mt-2 space-y-5">
+        {% for address in addresses %}
+            <div class="flex px-5 py-3 justify-between bg-secondary rounded-xl">
+                <div class="w-max">
+                    <div class="flex gap-10">
+                        <p class="name">
+							<i class="fa-solid fa-universal-access text-xl"></i>
+							{{ address.fullname }}
+						</p>
+                        <p class="phone">
+							<i class="fa-solid fa-square-phone text-xl"></i> 
+							{{ address.phone }}
+						</p>
+                    </div>
+                    <p class="address mt-3">
+						<i class="fa-solid fa-map-location-dot text-xl"></i> 
+						<span class="address">{{ address.address }}</span>
+					</p>
+					<span class="hiddenAddress hidden">{{ address.address }}</span>
+                </div>
+                <div class="w-fit space-x-6">
+                    <button class="w-36 ml-[1.5rem] mb-2 p-2 rounded-lg bg-sky-300 hover:text-white updateBtn">Cập nhật</button>
+					<form action="{% url "delete-address" %}" method="post" id="deleteFrm" onSubmit="return confirm('Bạn có muốn xóa địa chỉ này?')">
+						{% csrf_token %}
+						<button value="{{ address.pk }}" name="pk" type="submit" class="inline-block w-36 p-2 rounded-lg bg-red-300 text-center hover:text-white">Xóa</button>
+					</form>
+                </div>
+            </div>
+            {% empty %}
+            <p class="p-5 text-center italic">Bạn chưa thiết lập địa chỉ giao hàng nào!</p>
+        {% endfor %}
+    </div>
+</div>
+<!-- Address Modal -->
+<div id="myModal" class="invisible min-w-[50vw] min-h-[50vh] left-1/4 top-32 fixed bg-gray-300 rounded-lg overflow-hidden">
+	<form action="{% url "manage-address" %}" method="post">
+		{% csrf_token %}
+		<div class="flex justify-between text-white bg-indigo-500">
+			<h3 class="p-3 pl-5 italic"><i class="fa-solid fa-truck-fast"></i> Địa chỉ giao hàng</h3>
+			<button id="closeModal" class="px-5 py-3 hover:bg-red-500"><i class="fa-solid fa-xmark"></i></button>
+		</div>
+		<div class="p-5">
+			<div class="chooseAdd space-y-5">
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Họ tên: </span>
+					<input id="nameInput" type="text" name="fullname" class="w-3/5 p-2 rounded-md" required>
+				</div>
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Số điện thoại: </span>
+					<input id="tel"type="tel" name="phone" class="w-3/5 p-2 rounded-md" required>
+				</div>
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Thành phố/Tỉnh: </span>
+					<select id="dropdownProv" class="w-3/5 p-2 rounded-md" name="province" required></select>
+					<input type="hidden" >
+				</div>
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Quận/Huyện: </span>
+					<select id="dropdownDistr" class="w-3/5 p-2 rounded-md" name="district" required></select>
+					<input type="hidden" >
+				</div>
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Phường/Xã: </span>
+					<select id="dropdownWard" class="w-3/5 p-2 rounded-md" name="commune" required></select>
+					<input type="hidden" >
+				</div>
+				<div class="flex gap-3 items-center justify-center">
+					<span class="w-1/5">Số nhà: </span>
+					<input id="houseNum" type="text" name="number" class="w-3/5 p-2 rounded-md">
+				</div>
+			</div>
+		</div>
+		<button type="submit" name="pk" id="submitBtnModal" value="-1" class="btnConfirm block w-36 rounded-full mx-auto my-5 p-3 bg-indigo-500 text-white">Xác nhận</button>
+	</form>
+</div>
+<!-- Modal Script -->
+<script src="{% static "js/address.js" %}"></script>

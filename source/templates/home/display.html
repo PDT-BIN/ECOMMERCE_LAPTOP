@@ -1,0 +1,93 @@
+{% load humanize %}
+
+
+<section class="text-gray-600 font-main">
+    <div class="container px-3 py-6 mx-auto">
+		<!-- Show filtered products -->
+      	<div class="flex flex-wrap -m-4 my-4 gap-y-6">
+			{% for model in show_models %}
+				<div class="lg:w-1/4 md:w-1/2 p-4 w-full border-2 border-transparent hover:border-gray-400 rounded-lg hover:shadow-xl">
+					<!-- Image -->
+					<a href="{% url "orders:product" model.pk %}" class="block relative h-48 rounded overflow-hidden">
+						<img alt="" class="object-cover object-center w-full h-full block" src="{{ model.image }}">
+					</a>
+					<!-- Some specifications -->
+					<div class="mt-4 text-center">
+						<h2 id='name_spe' class="text-gray-900 title-font text-sm font-bold italic">
+							{{ model.name }} - {{ model.specification.pk }}
+						</h2>
+
+						<ul class="my-5 space-y-1 text-left">
+							<li class="odd:bg-gray-300 p-1 flex items-center gap-5">
+								<i class="fa-solid fa-microchip ml-5"></i>
+								<span id="cpu_spe">{{ model.specification.cpu }}</span>
+							</li>
+							<li class="odd:bg-gray-300 p-1 flex items-center gap-5">
+								<i class="fa-solid fa-memory ml-5"></i>
+								<span id="ram_spe">{{ model.specification.ram }}</span>
+							</li>
+							<li class="odd:bg-gray-300 p-1 flex items-center gap-5">
+								<i class="fa-solid fa-sd-card ml-5"></i>
+								<span id="disk_spe">{{ model.specification.disk }}</span>
+							</li>
+							<li class="odd:bg-gray-300 p-1 flex items-center gap-5">
+								<i class="fa-solid fa-server ml-5"></i>
+								<span id="os_spe">{{ model.specification.os }}</span>
+							</li>
+							<li class="odd:bg-gray-300 p-1 flex items-center gap-5">
+								<i class="fa-solid fa-display ml-5"></i>
+								<span id="scr_spe">{{ model.specification.screensize }} inches</span>
+							</li>
+						</ul>
+						<!-- Buy now -->
+						<a href="#" title="Mua ngay" class="btn_buy inline-block w-3/5 p-2 text-indigo-600 font-semibold bg-indigo-300 rounded-lg mx-auto {% if not request.user.is_authenticated %}pointer-events-none{% endif %}">
+							<i id="price_spe" class="fa-solid fa-dollar-sign"></i> {{ model.price | floatformat:0 | intcomma }} VNĐ
+						</a>
+						<input type="hidden" id="idModel" value="{{ model.pk }}">
+					</div>
+				</div>
+				<!-- Show status for no products found -->
+				{% empty %}
+				<div class="mb-4 flex flex-col w-full justify-center items-center gap-1">
+					<a href="{% url "home" %}" class="px-5 py-3 rounded-lg text-2xl font-semibold text-primary hover:bg-secondary hover:text-indigo-600">
+						<i class="fa-regular fa-face-meh-blank"></i> HOME
+					</a>
+					<div class="flex flex-col m-8 rounded shadow-md w-60 sm:w-80 animate-pulse h-96">
+						<div class="h-48 rounded-t dark:bg-gray-700"></div>
+						<div class="flex-1 px-4 py-8 space-y-4 sm:p-8 dark:bg-gray-900">
+							<div class="w-full h-6 rounded dark:bg-gray-700"></div>
+							<div class="w-full h-6 rounded dark:bg-gray-700"></div>
+							<div class="w-3/4 h-6 rounded dark:bg-gray-700"></div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+      	</div>
+		<!-- Pagination -->
+		<form action="{% url "home" %}">
+			<!-- Keyword controls filtered products -->
+			<input type="hidden" name="kw" value="{{ keyword }}">
+			<div class="mt-3 items-center space-y-2 text-xs sm:space-y-0 sm:space-x-3 sm:flex justify-center font-main italic font-bold">
+				<!-- Show current page of total pages -->
+				<span class="block">Trang {{ current_page }} / {{ total_pages }}</span>
+				<!-- Control page direction -->
+				<div class="space-x-1">
+					<!-- Go to previous page -->
+					<button type="submit" name="control" value="-1" {% if current_page == 1 %}disabled{% endif %} class="inline-flex items-center justify-center w-8 h-8 py-0 border rounded-md shadow hover:bg-secondary">
+						<i class="fa-solid fa-chevron-left"></i>
+					</button>
+					<!-- Set selected page -->
+					<input type="number" name="current_page" value="{{ current_page }}" min="1" max="{{ total_pages }}" class="inline-block relative p-2 w-20 bg-gray-200 outline-none rounded-xl hover:ring-2 hover:ring-gray-500 text-center">
+					<!-- Go to selected page -->
+					<button type="submit" name="control" value="0" class="px-4 py-2 relative rounded-lg outline-none bg-gray-300 hover:ring-2 hover:ring-gray-500">Go</button>
+					<!-- Go to next page -->
+					<button type="submit" name="control" value="1" {% if current_page == total_pages %}disabled{% endif %} class="inline-flex items-center justify-center w-8 h-8 py-0 border rounded-md shadow hover:bg-secondary">
+						<i class="fa-solid fa-chevron-right"></i>
+					</button>
+				</div>
+			</div>
+		</form>
+    </div>
+	<!-- Buy now Modal -->
+	{% include "home/buy_now.html" %}
+</section>

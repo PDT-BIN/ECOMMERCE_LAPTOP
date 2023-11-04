@@ -1,0 +1,476 @@
+{
+    "intents": [
+        {
+            "tag": "Greeting",
+            "patterns": [
+                "Hi",
+                "Hi there",
+                "Hola",
+                "Hello",
+                "Hello there",
+                "Hya",
+                "Hya there",
+
+                "Greet",
+                "Greeting"
+            ],
+            "responses": [
+                "Hi, what can I do for you?",
+                "Hello, how can I help you?"
+            ]
+        },
+        {
+            "tag": "GreetingResponse",
+            "patterns": [
+                "My user is",
+                "This is",
+                "I am",
+                "It is",
+                "My user is",
+                "This is",
+                "I am",
+                "It is"
+            ],
+            "responses": [
+                "Hi! How can I help?",
+                "Hi, how can I help you?",
+                "Hello, what can I do for you?",
+                "Hola, how can I help you?",
+                "hi, what can I do for you?"
+            ]
+        },
+        {
+            "tag": "CourtesyGreeting",
+            "patterns": [
+                "How are you?",
+                "Hi how are you?",
+                "Hello how are you?",
+                "Hola how are you?",
+                "How are you doing?",
+                "Hope you are doing well?",
+                "Hello hope you are doing well?"
+            ],
+            "responses": [
+                "Hello, I am great, how are you?",
+                "Hello, how are you? I am great thanks!",
+                "Hello, I am good thank you, how are you?",
+                "Hi, I am great, how are you?",
+                "Hi, how are you? I am great thanks!",
+                "Hi, I am good thank you, how are you?",
+                "Hi, good thank you, how are you?"
+            ]
+        },
+        {
+            "tag": "CourtesyGreetingResponse",
+            "patterns": [
+                "Good thanks! My user is Adam",
+                "Good thanks! This is Adam",
+                "Good thanks! I am Adam",
+                "Good thanks! It is Adam",
+                "Great thanks! My user is Bella",
+                "Great thanks! This is Bella",
+                "Great thanks! I am Bella",
+                "Great thanks! It is Bella"
+            ],
+            "responses": [
+                "Hi! How can I help?",
+                "Hi, how can I help you?",
+                "Hello, what can I do for you?",
+                "Hola, how can I help you?",
+                "Hi, what can I do for you?"
+            ]
+        },
+        {
+            "tag": "Thanks",
+            "patterns": [
+                "OK thank you",
+                "OK thanks",
+                "OK",
+                "Thanks",
+                "Thank you",
+                "That's helpful"
+            ],
+            "responses": [
+                "No problem!",
+                "Happy to help!",
+                "Any time!",
+                "My pleasure."
+            ]
+        },
+        {
+            "tag": "GoodBye",
+            "patterns": [
+                "Bye",
+                "Adios",
+                "See you later",
+                "Goodbye"
+            ],
+            "responses": [
+                "See you later.",
+                "Have a nice day.",
+                "Bye! Come back again soon."
+            ]
+        },
+        {
+            "tag": "CourtesyGoodBye",
+            "patterns": [
+                "Thanks, bye",
+                "Thanks for the help, goodbye",
+                "Thank you, bye",
+                "Thank you, goodbye",
+                "Thanks goodbye",
+                "Thanks good bye"
+            ],
+            "responses": [
+                "No problem, goodbye.",
+                "Not a problem! Have a nice day.",
+                "Bye! Come back again soon."
+            ]
+        },
+        {
+            "tag": "LaptopAsking",
+            "patterns": [
+                "Show me it",
+                "Could you show me the laptop?",
+                "Show me more information",
+
+                "Sell me it",
+                "Can you sell me",
+                
+                "give me",
+                "give me the link to",
+                "Take me to it",
+                "link to the product",
+                "link to it",
+                "What is the link",
+                
+                "I would like to buy it",
+                "I want to buy",
+                "buy it",
+                "",
+                "laptop"
+            ],
+            "responses": [
+                "Here are the links to the products",
+                "You can further check the products by clicking the following links",
+                "The following links will show you the products"
+            ],
+            "extension": {
+                "function": "getSpecs",
+                "entities": false,
+                "responses": []
+            },
+            "context": {
+                "in": "{model}",
+                "out": "{model}",
+                "clear": true
+            },
+            "entityType": "NA",
+            "entities": []
+        },
+        {
+            "tag": "LaptopSpecsAsking",
+            "patterns": [
+                "Tell me about ",
+                "What about",
+
+                "Could you give me some information of it?",
+                "Give me some information of it?",
+                "I need information about laptop",
+                "Tell me information about it model",
+                "laptop specifications",
+
+                "Could you give me some specifications of ?",
+                "Give me some specifications of",
+                "I need specifications of laptop",
+                "Show me specifications of model",
+                "it information",
+
+                "Could you give me some specs of it?",
+                "I need specs of it",
+                "what are the specs of laptop model",
+                "it specs",
+
+                "Give me configurations of ",
+                "tell me the configurations of it",
+                "What are the configurations?",
+
+                "What is its parameter",
+                "parameter",
+                "Tell me its parameter"
+            ],
+            "responses": [
+                "Here are some of the model's informations",
+                "Here are some of its specifications",
+                "These are the informations of your requested laptop",
+                "Here are the specifications of the laptop which you asked of"
+            ]
+        },
+        {
+            "tag": "IsLaptopAvailable",
+            "patterns": [
+                "Do you have ?",
+                "Does the shop have it?",
+                "Does the shop sell ?",
+
+                "Available ",
+                "Is it available?",
+                "Is it model available in your shop?"
+            ],
+            "responses": [
+                ["Yes, here are the links to the laptops.",
+                "Yes, you can buy the products by clicking the following images."],
+                ["Unfortunately, we don't have that model.",
+                "I'm terribly sorry, we don't have that product."]
+            ],
+            "extension": {
+                "function": "getAvailability",
+                "entities": false,
+                "responses": []
+            },
+            "context": {
+                "in": "{model}",
+                "out": "{model}",
+                "clear": true
+            },
+            "entityType": "NA",
+            "entities": []
+        },
+        {
+            "tag": "LaptopPriceAsking",
+            "patterns": [
+                "what is the price of it?",
+                "tell me the price of ",
+                "what is its price?",
+
+                "asking price of ?",
+                "what is asking price?",
+                "price of ?",
+                " price?",
+
+                "how much is it",
+                "how much do you sell it for?",
+                "how much is ",
+                "how much do you sell for?",
+                
+                "the value of ",
+                "what is value?"
+            ],
+            "responses": [
+                "The price of it is <price> dong.",
+                "It is <price> dong.",
+                "You'd have to pay <price> dong for it.",
+                "We sell it for <price> dong."
+            ]
+        },
+        {
+            "tag": "LaptopOSAsking",
+            "patterns": [
+                "tell me the OS of it",
+                "What is the OS of it?",
+                "what is OS?",
+                "What OS does it run on?",
+                "OS of it?",
+
+                "What is the operating system of it?",
+                "tell me the operating system of it",
+                "Which operating system does it have?",
+                "What operating system does it run on?",
+                "operating system of ?",
+                "what is operating system?",
+
+                "What is the hdh of it?",
+                "tell me the hdh of ",
+                "Which hdh does it it have?",
+                "What hdh does it run on?",
+                "hdh of it?",
+                "what is hdh?"
+            ],
+            "responses": [
+                "Here are the operating system of the products:",
+                "The operating system of the products are:"
+            ]
+        },
+        {
+            "tag": "LaptopAskingSpecific",
+            "patterns": [
+                "model with code",
+                "with specification code",
+                "has specs code",
+
+                "model with number",
+                "has specification numer",
+                "with number"
+            ],
+            "responses": [
+                "What do you need to know about it?",
+                "What information do you need to know about it?"
+            ]
+        },
+        {
+            "tag": "LaptopOffice",
+            "patterns": [
+                "Give me laptops for work",
+                "Which is good for working",
+                "Working laptop",
+                "I need a laptop for work",
+                "I want to buy a for work",
+                "suitable for work",
+
+                "Give me laptops for school",
+                "Which is good for school",
+                "school laptop",
+                "I need a laptop for school",
+                "I want to buy a for school",
+                "suitable for school",
+
+                "Give me laptops for learning",
+                "Which is good for learning",
+                "learn laptop",
+                "I need a laptop for learning",
+                "I want to buy a for learning",
+                "suitable for learning",
+
+                "Give me laptops for office",
+                "Which is good for office",
+                "office laptop",
+                "I need a laptop for office",
+                "I want to buy a for office",
+                "suitable for office",
+
+                "Give me laptops for student",
+                "Which is good for student",
+                "student laptop",
+                "I need a laptop for student",
+                "I want to buy a for student",
+                "suitable for student",
+
+                "Give me laptops for study",
+                "Which is good for study",
+                "study laptop",
+                "I need a laptop for study",
+                "I want to buy a for study",
+                "suitable for study"
+            ],
+            "responses": [
+                "Here is the link to office laptops.",
+                "The following link will lead you to our office laptop section.",
+                "It sounds like what you need is a office laptop. Here is the link to out office laptop category."
+            ]
+        },
+        {
+            "tag": "LaptopLight",
+            "patterns": [
+                "Give me a thin and light laptop",
+                "Which is thin and slim",
+                "light slim laptop",
+                "I need a laptop thin",
+                "I want to buy a light ",
+                "suitable for slim",
+
+                "Give me compact laptops",
+                "Which is good compact",
+                "compact laptop",
+                "I need compact laptop",
+                "I want to buy comapct laptop",
+                "suitable compact",
+
+                "Give me neat laptops",
+                "Which is neat laptop",
+                "neat laptop",
+                "I need a neat laptop",
+                "I want to buy a neat",
+                "suitable neat"
+            ],
+            "responses": [
+                "Here is the link to our thin and light laptops.",
+                "The following link will lead you to our thin and light laptop section.",
+                "It sounds like what you need is a thin and light laptop. Here is the link to out thin and light laptop category."
+            ]
+        },
+        {
+            "tag": "LaptopGaming",
+            "patterns": [
+                "Give me a gaming laptop",
+                "Which is gaming",
+                "gaming laptop",
+                "I need a gaming laptop",
+                "I want to buy a gaming ",
+                "suitable for gaming",
+
+                "Give me esport laptops",
+                "Which is esport",
+                "laptop to play esport",
+                "I need esport laptop",
+                "I want to buy esport laptop",
+                "suitable esport",
+
+                "Give me entertain laptops",
+                "Which is entertain laptop",
+                "entertain laptop",
+                "I need a entertain laptop",
+                "I want to buy a entertain",
+                "suitable entertain"
+            ],
+            "responses": [
+                "Here is the link to our gaming laptops.",
+                "The following link will lead you to our gaming laptop section.",
+                "It sounds like what you need is a gaming laptop. Here is the link to our gaming laptop category."
+            ]
+        },
+        {
+            "tag": "LaptopGraphic",
+            "patterns": [
+                "Give me a technical laptop",
+                "Which is technical",
+                "technical laptop",
+                "I need a technical laptop",
+                "I want to buy a graphics ",
+                "suitable for graphics",
+
+                "Give me graphics laptops",
+                "Which is graphics",
+                "laptop to play photoshop",
+                "I need photoshop laptop",
+                "I want to buy photoshop laptop",
+                "suitable photoshop",
+
+                "Give me video laptops",
+                "Which is video laptop",
+                "video laptop",
+                "I need a 3d laptop",
+                "I want to buy a 3d",
+                "suitable 3d"
+            ],
+            "responses": [
+                "Here is the link to our technical graphic laptops.",
+                "The following link will lead you to our technical graphic laptop section.",
+                "It sounds like what you need is a technical graphic laptop. Here is the link to our technical graphic laptop category."
+            ]
+        },
+        {
+            "tag": "Function",
+            "patterns": [
+                "What can you do?",
+                "What do you do?",
+                "What are you capable of doing?",
+                "Your ability",
+
+                "What can you help me with?",
+                "How can you assist me?",
+                "What kind of assistance do you provide?",
+                "Can you help me?",
+                
+                "What are your features",
+                "tell me your features",
+                "What is your function?",
+                "Tell me your function",
+                "indicates function"
+            ],
+            "responses": [
+                "I can greet, say thanks, and goodbye. I can provide you with specifications, prices, and links to our products. I can also provide links to our sections like gaming laptops, office laptops, or brand-based like Dell, Asus, and many more brands.",
+                "I can chat with you, give you data about our products, and lead you to different categories, like gaming laptops or our Dell category."
+            ]
+        }
+    ]
+}

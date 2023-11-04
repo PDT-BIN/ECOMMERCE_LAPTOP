@@ -1,0 +1,207 @@
+{% extends "components/component.html" %}
+{% load static %}
+{% load humanize %}
+
+
+{% block tool %}
+	{% include "components/search.html" with type="controls:importation" %}
+	{% if not request.user.is_superuser %}
+		<a href="{% url "controls:create-importation" %}" class="hover:text-green-500"><i class="fa-regular fa-square-plus text-3xl"></i></a>
+	{% endif %}
+	{% if action %}
+		<a href="{% url "controls:importation" %}">
+			<i class="fa-solid fa-right-from-bracket text-2xl hover:text-red-500"></i>
+		</a>
+	{% endif %}
+{% endblock tool %}
+
+{% block table %}
+	{% if not action %}
+		<div class="rounded-lg overflow-hidden">
+			<table class="min-w-full text-xs">
+				<thead class="dark:bg-gray-700">
+					<tr class="text-left">
+						<th class="w-[15%] p-3">Ngày lập</th>
+						<th class="w-[15%] p-3">Phiếu đặt</th>
+						<th class="w-[15%] p-3">Phiếu nhập</th>
+						<th class="w-[20%] p-3">Nhà cung cấp</th>
+						<th class="w-[20%] p-3">Thành tiền</th>
+						<th class="w-[15%] p-3 text-center">Thao tác</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for result in results %}
+						<tr class="border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900">
+							<td class="p-3 dark:text-gray-400">
+								<p>{{ result.created | date:"d/m/Y" }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.reservation_form.pk }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.pk }}</p>
+							</td>
+							<td class="p-3">
+								<p>{{ result.reservation_form.supplier }}</p>
+							</td>
+							<td class="p-3 dark:text-gray-400">
+								<p>{{ result.total | floatformat:0 | intcomma }}</p>
+							</td>
+							<td class="p-3">
+								<form action="{% url "controls:view-importation" result.pk %}" class="text-center">
+									<button class="hover:text-sky-500">
+										<i class="fa-solid fa-eye text-2xl"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="p-5 bg-gray-200 rounded-md overflow-hidden text-black">
+			{% if task == 0 %}
+				<form action="" method="post" class="flex flex-col gap-5">
+					{% csrf_token %}
+
+					<div class="space-y-4">
+						<div class="flex justify-between items-center">
+							<label for="" class="text-sm italic">Phiếu đặt hàng</label>
+							<select name="reservation">
+								{% for reservation in reservations %}
+									<option value="{{ reservation.pk }}">{{ reservation.pk }} - {{ reservation.supplier }}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="w-[70%] bg-white p-2 outline-none rounded-md ml-auto flex items-center gap-3">
+							<i class="fa-solid fa-magnifying-glass px-2 text-xl"></i>
+							<input type="text" id="look-up" class="w-full outline-none placeholder:italic placeholder:text-sm" placeholder="Nhập mã hoặc tên sản phẩm">
+						</div>
+						<div class="w-[70%] ml-auto text-white text-xs">
+							<ul class="dark:bg-gray-700 flex min-w-full font-bold">
+								<li class="p-3 w-[10%]"></li>
+								<li class="p-3 w-[30%]">Sản phẩm</li>
+								<li class="p-3 w-[45%]">Số lượng</li>
+								<li class="p-3 w-[15%]">Giá đặt</li>
+							</ul>
+							<div class="min-h-[500px] max-h-[500px] overflow-y-auto bg-gray-900">
+								{% for detail in importation_details %}
+									<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+										<input class="filter" type="hidden" value="{{ detail.reservations_detail.reservation_form.pk }}">
+										<div class="p-3 text-center w-[10%]">
+											<input type="checkbox" class="M" name="model-list[]" value="{{ detail.reservations_detail.pk }}" checked>
+										</div>
+										<div class="p-3 w-[30%]">
+											<p class="model-code">{{ detail.reservations_detail.laptop_model }}</p>
+										</div>
+										<div class="p-3 text-black w-[45%] flex items-center gap-5">
+											<input type="number" class="Q w-3/4 p-2" name="{{ detail.reservations_detail.pk }}_Q" min="1" max="{{ detail.reservations_detail.quantity }}" value={{ detail.quantity }} required>
+											<p class="text-white flex items-center gap-3 italic">
+												{{ detail.reservations_detail.quantity }} <i class="fa-solid fa-box text-lg"></i>
+											</p>
+										</div>
+										<div class="p-3 w-[15%]">
+											<p class="model-code">{{ detail.reservations_detail.price | floatformat:0 | intcomma }}</p>
+										</div>
+									</div>
+								{% endfor %}
+								{% for detail in reservation_details %}
+									{% if not detail.importationdetails_set.all %}
+										<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+											<input class="filter" type="hidden" value="{{ detail.reservation_form.pk }}">
+											<div class="p-3 text-center w-[10%]">
+												<input type="checkbox" class="M" name="model-list[]" value="{{ detail.pk }}">
+											</div>
+											<div class="p-3 w-[30%]">
+												<p class="model-code">{{ detail.laptop_model }}</p>
+											</div>
+											<div class="p-3 text-black w-[45%] flex items-center gap-5">
+												<input type="number" class="Q w-3/4 p-2" name="{{ detail.pk }}_Q" min="1" max="{{ detail.quantity }}">
+												<p class="text-white flex items-center gap-3 italic">
+													{{ detail.quantity }} <i class="fa-solid fa-box text-lg"></i>
+												</p>
+											</div>
+											<div class="p-3 w-[15%]">
+												<p class="model-code">{{ detail.price | floatformat:0 | intcomma }}</p>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="mt-5 w-1/6 mx-auto text-green-500 bg-white px-5 py-2 rounded-md hover:bg-green-500 hover:text-white italic">
+						Xác nhận
+					</button>
+				</form>
+			{% else %}
+				<div class="space-y-4">
+					<div class="flex justify-between items-center">
+						<label for="" class="text-sm italic">Phiếu đặt hàng</label>
+						<input type="text" readonly class="dashboard-input" value="{{ reservation.pk }} - {{ reservation.supplier.name }}">
+					</div>
+
+					<div class="w-[70%] bg-white p-2 outline-none rounded-md ml-auto flex items-center gap-3">
+						<i class="fa-solid fa-magnifying-glass px-2 text-xl"></i>
+						<input type="text" id="look-up" class="w-full outline-none placeholder:italic placeholder:text-sm" placeholder="Nhập mã hoặc tên sản phẩm">
+					</div>
+					<div class="w-[70%] ml-auto text-white text-xs">
+						<ul class="dark:bg-gray-700 flex min-w-full font-bold">
+							<li class="p-3 w-[10%]"></li>
+							<li class="p-3 w-[30%]">Sản phẩm</li>
+							<li class="p-3 w-[45%]">Số lượng</li>
+							<li class="p-3 w-[15%]">Giá đặt</li>
+						</ul>
+						<div class="min-h-[500px] max-h-[500px] overflow-y-auto bg-gray-900">
+							{% for detail in importation_details %}
+								<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+									<input class="filter" type="hidden" value="{{ detail.reservations_detail.reservation_form.pk }}">
+									<div class="p-3 text-center w-[10%]">
+										<input type="checkbox" class="M" name="model-list[]" value="{{ detail.reservations_detail.pk }}" checked disabled>
+									</div>
+									<div class="p-3 w-[30%]">
+										<p class="model-code">{{ detail.reservations_detail.laptop_model }}</p>
+									</div>
+									<div class="p-3 text-black w-[45%] flex items-center gap-5">
+										<input type="number" class="Q w-3/4 p-2" name="{{ detail.reservations_detail.pk }}_Q" min="1" max="{{ detail.reservations_detail.quantity }}" value={{ detail.quantity }} required readonly>
+										<p class="text-white flex items-center gap-3 italic">
+											{{ detail.reservations_detail.quantity }} <i class="fa-solid fa-box text-lg"></i>
+										</p>
+									</div>
+									<div class="p-3 w-[15%]">
+										<p class="model-code">{{ detail.reservations_detail.price | floatformat:0 | intcomma }}</p>
+									</div>
+								</div>
+							{% endfor %}
+							{% for detail in reservation_details %}
+								{% if not detail.importationdetails_set.all %}
+									<div class="model border-b border-opacity-20 dark:border-gray-700 dark:bg-gray-900 flex items-center">
+										<input class="filter" type="hidden" value="{{ detail.reservation_form.pk }}">
+										<div class="p-3 text-center w-[10%]">
+											<input type="checkbox" class="M" name="model-list[]" value="{{ detail.pk }}" disabled>
+										</div>
+										<div class="p-3 w-[30%]">
+											<p class="model-code">{{ detail.laptop_model }}</p>
+										</div>
+										<div class="p-3 text-black w-[45%] flex items-center gap-5">
+											<input type="number" class="Q w-3/4 p-2" name="{{ detail.pk }}_Q" min="1" max="{{ detail.quantity }}" readonly>
+											<p class="text-white flex items-center gap-3 italic">
+												{{ detail.quantity }} <i class="fa-solid fa-box text-lg"></i>
+											</p>
+										</div>
+										<div class="p-3 w-[15%]">
+											<p class="model-code">{{ detail.price | floatformat:0 | intcomma }}</p>
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	{% endif %}
+	<script src="{% static "js/form.js" %}"></script>
+{% endblock table %}

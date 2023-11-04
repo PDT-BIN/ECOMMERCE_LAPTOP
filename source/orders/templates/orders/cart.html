@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}Giỏ hàng{% endblock title %}
+
+{% block content %}
+    {% include "home/header.html" %}
+    <section class="w-[90%] mx-auto my-5 flex font-main relative">
+        <!-- Address -->
+        <form action="{% url "orders:create-order" %}" method="post" class="w-3/5 p-5 min-h-screen border-r border-r-secondary flex flex-col gap-3">
+            {% csrf_token %}
+            
+            <h3 class="text-xl font-extrabold flex justify-between">
+                <span>Thông tin vận chuyển</span>
+                <button class="changeAddress text-sm font-normal hover:text-sky-400 cursor-pointer">
+                    <i class="fa-solid fa-book-atlas"></i> Chọn từ sổ địa chỉ
+                </button>
+            </h3>
+            <div class="py-3 space-y-4">
+                <div class="flex justify-between">
+                    <input type="text" name="fullname" class="w-[48%] px-5 py-2 border-2 border-gray-400 rounded-2xl placeholder:text-sm" placeholder="Họ tên" required>
+                    <input type="tel" name="phone" class="w-[48%] px-5 py-2 border-2 border-gray-400 rounded-2xl placeholder:text-sm" placeholder="Số điện thoại" required>
+                </div>
+                <input type="email" name="email" class="w-full px-5 py-2 border-2 border-gray-400 rounded-2xl" value="{{ request.user.email }}" disabled>
+                <input type="text" name="address" class="w-full px-5 py-2 border-2 border-gray-400 rounded-2xl placeholder:text-sm" placeholder="Địa chỉ giao hàng" required>
+            </div>
+
+            <h3 class="mt-5 text-xl font-extrabold">Hình thức thanh toán</h3>
+            <ul class="py-3 space-y-4">
+                <li  class="px-5 py-2 flex items-center gap-5 border-2 border-gray-400 rounded-xl">
+                    <input type="radio" checked readonly class="w-5 h-5">
+                    <i class="fa-solid fa-truck text-3xl"></i>
+                    <div class="text-primary">
+                        <p class="text-sm">COD</p>
+                        <p class="text-xs">Thanh toán khi nhận hàng</p>
+                    </div>
+                </li>
+                <li  class="px-5 py-2 flex items-center gap-5 border-2 border-gray-400 rounded-xl">
+                    <input type="radio" disabled class="w-5 h-5">
+                    <i class="fa-solid fa-credit-card text-3xl"></i>
+                    <div class="text-primary">
+                        <p class="text-sm">Thanh toán với thẻ tín dụng</p>
+                        <p class="text-xs">Thẻ ATM / Thẻ tín dụng (Credit Card) / Thẻ ghi nợ (Debit Card)</p>
+                    </div>
+                </li>
+                <li  class="px-5 py-2 flex items-center gap-5 border-2 border-gray-400 rounded-xl">
+                    <input type="radio" disabled class="w-5 h-5">
+                    <i class="fa-solid fa-globe text-3xl"></i>
+                    <div class="text-primary">
+                        <p class="text-sm">Thanh toán quốc tế</p>
+                        <p class="text-xs">Thẻ Visa / Thẻ Master</p>
+                    </div>
+                </li>
+                <li  class="px-5 py-2 flex items-center gap-5 border-2 border-gray-400 rounded-xl">
+                    <input type="radio" disabled class="w-5 h-5">
+                    <i class="fa-solid fa-qrcode text-3xl"></i>
+                    <div class="text-primary">
+                        <p class="text-sm">Chuyển khoản liên ngân hàng với QR Code</p>
+                        <p class="text-xs">Chuyển tiền qua ví điện tử (MoMo, ZaloPay, ...)</p>
+                    </div>
+                </li>
+            </ul>
+
+            <button type="submit" class="w-full p-4 bg-indigo-500 text-white rounded-xl {% if total == 0 %}opacity-50 pointer-events-none{% endif %}">
+                Thanh toán ({{ total | floatformat:0 | intcomma }} VNĐ)
+            </button>
+        </form>
+        <!-- Cart Items -->
+        <div class="w-2/5 p-5 min-h-screen flex flex-col gap-3">
+            <h3 class="text-xl font-extrabold">Giỏ hàng</h3>
+            
+            <ul class="mt-5 flex flex-col gap-10">
+                {% for detail in cart_details %}
+                    <li class="flex flex-col sm:flex-row sm:justify-between">
+                        <div class="relative flex w-full space-x-3 sm:space-x-4">
+                            <a href="{% url "orders:product" detail.laptop_model.pk %}" class="{% if detail.laptop_model.quantity == 0 %}opacity-20 pointer-events-none{% endif %}">
+                                <img class="flex-shrink-0 w-48 h-32 object-cover dark:border-transparent rounded outline-none dark:bg-gray-500" src="{{ detail.laptop_model.image }}">
+                            </a>
+                            {% if detail.laptop_model.quantity == 0 %}
+                                <p class="absolute -left-1 top-12 w-28 p-2 rounded-full font-bold bg-yellow-100 text-red-500 text-center -rotate-[30deg] opacity-100">
+                                    Hết hàng
+                                </p>
+                            {% endif %}
+                            <div class="flex flex-col justify-between w-full">
+                                <div class="flex justify-between w-full pb-2 space-x-2">
+                                    <div class="space-y-3">
+                                        <h3 class="text-sm font-semibold sm:pr-8 w-52 italic">
+                                            {{ detail.laptop_model.name }} - {{ detail.laptop_model.specification.pk }}
+                                        </h3>
+                                        
+                                        <form action="{% url "orders:update-cart" detail.pk %}" class="flex w-fit px-3 py-1 gap-5 border border-primary rounded-lg {% if detail.laptop_model.quantity == 0 %}opacity-20 pointer-events-none{% endif %}">
+                                            <button type="submit" name="control" value="-1" >
+                                                <i class="fa-solid fa-minus text-xs"></i>
+                                            </button>
+                                            <p>{{ detail.quantity }}</p>
+                                            <button type="submit" name="control" value="1">
+                                                <i class="fa-solid fa-plus text-xs"></i>
+                                            </button>
+                                        </form>
+
+                                        <h3 class="text-sm font-semibold sm:pr-8 w-52 {% if detail.laptop_model.quantity >= 10 %}text-yellow-500{% else %}text-red-500{% endif %} ">
+                                            Tối đa: {{ detail.laptop_model.quantity }}
+                                        </h3>
+                                    </div>
+                                    <div class="text-right flex flex-col justify-between">
+                                        <a href="{% url "orders:delete-cart" detail.pk %}" class="text-right"><i class="fa-solid fa-xmark"></i></a>
+                                        <p class="text-sm font-semibold">
+                                            {{ detail.laptop_model.price | floatformat:0 | intcomma }} VNĐ
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <p class="text-center text-sm">Bạn chưa có sản phẩm nào!</p>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- Support Modal -->
+        <div class="hidden">
+            <div class="flex gap-3 items-center justify-center">
+                <span class="w-1/5">Thành phố/Tỉnh: </span>
+                <select id="dropdownProv" class="w-3/5 p-2 rounded-md" name="province" required></select>
+                <input type="hidden" >
+            </div>
+            <div class="flex gap-3 items-center justify-center">
+                <span class="w-1/5">Quận/Huyện: </span>
+                <select id="dropdownDistr" class="w-3/5 p-2 rounded-md" name="district" required></select>
+                <input type="hidden" >
+            </div>
+            <div class="flex gap-3 items-center justify-center">
+                <span class="w-1/5">Phường/Xã: </span>
+                <select id="dropdownWard" class="w-3/5 p-2 rounded-md" name="commune" required></select>
+                <input type="hidden" >
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="myAddressModal" class="modal">
+            <div class="modal-content w-1/2 p-0 border-0 bg-gray-500 rounded-md font-main">
+                <!-- Title -->
+                <p class="title p-3 text-base text-white bg-indigo-600">
+                    <i class="fa-solid fa-truck-fast"></i> Địa chỉ giao hàng
+                </p>
+                <!-- Content -->
+                <div class="px-5 my-4 flex flex-col gap-3">
+                    {% for address in addresses %}
+                        <div class="address border-2 px-3 py-2 bg-white rounded-lg my-2 flex flex-col gap-3">
+                            <h3 class="font-bold">
+                                <i class="fa-solid fa-user-tag"></i> <span class="fullname">{{ address.fullname }}</span>
+                                <span class="ml-3">
+                                    <i class="fa-solid fa-phone-volume"></i> <span class="phone">{{ address.phone }}</span>
+                                </span>
+                            </h3>
+                            <p class="italic"><i class="fa-solid fa-street-view"></i> <span class="address">{{ address.address }}</span></p>
+                            <button class="changeAddressBtn block ml-auto bg-blue-500 text-white rounded-md px-3 py-2 hover:bg-blue-300 hover:shadow">
+                                <i class="fa-solid fa-location-crosshairs"></i> Giao đến đây
+                            </button>
+                        </div>
+                    {% empty %}
+                        <p class="text-white p-5 italic text-center">Bạn chưa thiết lập địa chỉ nào!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include "home/footer.html" %}
+
+    <script src="{% static "js/cart.js" %}"></script>
+    <script src="{% static "js/address.js" %}"></script>
+{% endblock content %}

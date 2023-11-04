@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Đăng nhập{% endblock title %}
+
+{% block content %}
+<div class="log-form-control">
+    <form action="" method="post" class="log-form">
+        {% csrf_token %}
+        <div class="mb-10">
+            <a href="{% url "home" %}">
+                <img src="{% static "img/logo.svg" %}" alt="Logo" class="w-20 mx-auto">
+            </a>
+
+            <h1 class="text-4xl text-center font-serif font-semibold">WELCOME</h1>
+        </div>
+
+        <div class="my-5 space-y-7">
+            <div class="log-input-group">
+                <i class="fa-solid fa-user log-input-icon"></i>
+                {{ form.username }}
+            </div>
+    
+            <div class="log-input-group">
+                <i class="fa-solid fa-lock log-input-icon"></i>
+                {{ form.password }}
+            </div>
+        </div>
+
+        <a href="{% url "forgot" %}" class="block text-right text-sm italic hover:text-sky-300">Forgot password?</a>
+
+        <button type="submit" class="log-button">SIGN IN</button>
+        
+        <p class="mt-10 text-center text-sm italic">
+            Don't have an account? <a href="{% url 'signup' %}" class="hover:text-sky-300">Register</a>
+        </p>
+    </form>
+
+    <div class="mt-5 flex space-x-10">
+        <a href="#" class="inline-block p-2 border-2 border-solid border-sky-300 w-40 text-center bg-sky-300 rounded-xl hover:ring-4 hover:ring-sky-500">
+            <i class="fa-brands fa-facebook"></i> Facebook
+        </a>
+
+        <a href="#" class="inline-block p-2 border-2 border-solid border-green-300 w-40 text-center bg-green-300 rounded-xl hover:ring-4 hover:ring-green-500">
+            <i class="fa-brands fa-google"></i> Google
+        </a>
+    </div>
+</div>
+{% endblock content %}

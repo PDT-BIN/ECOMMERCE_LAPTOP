@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Quên mật khẩu{% endblock title %}
+
+{% block content %}
+<div class="log-form-control">
+    <form action="" method="post" class="log-form">
+        {% csrf_token %}
+        <h1 class="mb-12 text-4xl text-center font-serif font-semibold">FORGOT PASSWORD</h1>
+
+        <div class="my-5 space-y-7">
+            <div class="log-input-group">
+                <i class="fa-solid fa-user log-input-icon"></i>
+                <input type="text" name="username" class="log-input-field" placeholder="Username" required>
+            </div>
+    
+            <div class="log-input-group">
+                <i class="fa-solid fa-envelope log-input-icon"></i>
+                <input type="email" name="email" class="log-input-field" placeholder="Email" required>
+            </div>
+        </div>
+
+        <button type="submit" class="log-button">CONFIRM</button>
+        
+        <p class="mt-10 text-center text-sm italic">
+            Go back to login? <a href="{% url 'signin' %}" class="hover:text-sky-300">Login</a>
+        </p>
+    </form>
+</div>
+{% endblock content %}
