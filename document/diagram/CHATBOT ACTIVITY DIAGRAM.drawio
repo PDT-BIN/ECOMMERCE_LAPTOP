@@ -1,0 +1,69 @@
+<mxfile host="app.diagrams.net" modified="2023-10-31T11:57:33.514Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.76" etag="CsDSC2I9G_j_MxGEtYes" version="22.0.8" type="device">
+  <diagram name="Trang-1" id="riECzNyxkAY8H1ekNa-P">
+    <mxGraphModel dx="1002" dy="539" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-1" target="jjm_iwe9MJxoO4ZBsdH2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-1" value="DỮ LIỆU ĐẦU VÀO" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="127" y="147" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-2" target="jjm_iwe9MJxoO4ZBsdH2-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-2" value="XỬ LÝ CHUỖI" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="127" y="296" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-5" target="jjm_iwe9MJxoO4ZBsdH2-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-5" value="NHẬN DẠNG VỀ SẢN PHẨM?" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="339" y="281" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-7" value="TÌM TỶ LỆ GIỮA CÁC CÂU HỎI LIÊN QUAN ĐẾN LAPTOP VÀ TRẢ LỜI" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="581" y="278.5" width="194" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-12" target="jjm_iwe9MJxoO4ZBsdH2-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-12" target="jjm_iwe9MJxoO4ZBsdH2-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-12" value="NHẬN DẠNG VỀ HÃNG SẢN XUẤT?" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="339" y="439" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.495;entryY=0.033;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontFamily=Courier New;fontSize=13;" edge="1" parent="1" source="jjm_iwe9MJxoO4ZBsdH2-5" target="jjm_iwe9MJxoO4ZBsdH2-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-14" value="ĐƯA ĐƯỜNG DẪN ĐẾN HÃNG" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="581" y="436.5" width="194" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="jjm_iwe9MJxoO4ZBsdH2-16" value="TÌM TỶ LỆ GIỮA CÁC CÂU HỎI THÔNG THƯỜNG HOẶC LIÊN QUAN ĐẾN LAPTOP TRONG NGỮ CẢNH HOẶC VỀ DANH MỤC SẢN PHẨM VÀ TRẢ LỜI" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="280" y="597" width="268" height="124" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;i&gt;Có&lt;/i&gt;" placeholders="1" name="Variable" id="jjm_iwe9MJxoO4ZBsdH2-18">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Courier New;" vertex="1" parent="1">
+            <mxGeometry x="491" y="306" width="80" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;i&gt;Có&lt;/i&gt;" placeholders="1" name="Variable" id="jjm_iwe9MJxoO4ZBsdH2-20">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Courier New;" vertex="1" parent="1">
+            <mxGeometry x="491" y="465" width="80" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;i&gt;Không&lt;/i&gt;" placeholders="1" name="Variable" id="jjm_iwe9MJxoO4ZBsdH2-21">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;rotation=90;fontFamily=Courier New;" vertex="1" parent="1">
+            <mxGeometry x="388" y="395" width="80" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;i&gt;Không&lt;/i&gt;" placeholders="1" name="Variable" id="jjm_iwe9MJxoO4ZBsdH2-22">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;rotation=90;fontFamily=Courier New;" vertex="1" parent="1">
+            <mxGeometry x="388" y="546" width="80" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
